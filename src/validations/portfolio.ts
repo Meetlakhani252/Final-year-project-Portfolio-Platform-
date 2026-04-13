@@ -34,3 +34,40 @@ export const avatarFileSchema = z
     (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
     "Only JPEG, PNG, WebP, and GIF images are accepted"
   );
+
+export const MAX_SCREENSHOTS_PER_PROJECT = 5;
+
+const optionalUrl = z
+  .string()
+  .trim()
+  .refine((val) => !val || /^https?:\/\/.+/.test(val), {
+    message: "Enter a valid URL (http:// or https://)",
+  });
+
+export const projectSchema = z.object({
+  title: z
+    .string()
+    .min(2, "Title must be at least 2 characters")
+    .max(150, "Title must be at most 150 characters"),
+  description: z
+    .string()
+    .max(2000, "Description must be at most 2000 characters"),
+  tech_stack: z
+    .array(z.string().min(1).max(40))
+    .max(20, "At most 20 technologies"),
+  github_url: optionalUrl,
+  live_url: optionalUrl,
+});
+
+export type ProjectInput = z.infer<typeof projectSchema>;
+
+export const projectScreenshotFileSchema = z
+  .instanceof(File)
+  .refine(
+    (file) => file.size <= MAX_IMAGE_SIZE,
+    "Each screenshot must be less than 5MB"
+  )
+  .refine(
+    (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+    "Screenshots must be JPEG, PNG, WebP, or GIF"
+  );

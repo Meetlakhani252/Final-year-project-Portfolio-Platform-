@@ -23,6 +23,12 @@ export default async function PortfolioEditPage() {
     redirect("/onboarding");
   }
 
+  const { data: projects } = await supabase
+    .from("projects")
+    .select("*, screenshots:project_screenshots(*)")
+    .eq("profile_id", user.id)
+    .order("display_order");
+
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6">
       <header>
@@ -32,7 +38,7 @@ export default async function PortfolioEditPage() {
           {profile.username}
         </p>
       </header>
-      <PortfolioEditTabs profile={profile} />
+      <PortfolioEditTabs profile={profile} projects={projects ?? []} />
     </div>
   );
 }

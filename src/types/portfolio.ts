@@ -2,6 +2,13 @@ import type { Database } from "@/types/database";
 
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type SocialLink = Database["public"]["Tables"]["social_links"]["Row"];
+export type Project = Database["public"]["Tables"]["projects"]["Row"];
+export type ProjectScreenshot =
+  Database["public"]["Tables"]["project_screenshots"]["Row"];
+
+export type ProjectWithScreenshots = Project & {
+  screenshots: ProjectScreenshot[];
+};
 
 export type PortfolioAbout = Pick<
   Profile,

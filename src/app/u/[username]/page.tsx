@@ -63,8 +63,14 @@ export default async function PublicPortfolioPage({
     .select("*")
     .eq("profile_id", profile.id);
 
+  const { data: projects } = await supabase
+    .from("projects")
+    .select("*, screenshots:project_screenshots(*)")
+    .eq("profile_id", profile.id)
+    .order("display_order");
+
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
+    <main className="mx-auto w-full max-w-3xl space-y-8 px-4 py-10 sm:py-16">
       <Card>
         <CardContent className="space-y-6 p-6 sm:p-8">
           <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
@@ -125,6 +131,86 @@ export default async function PublicPortfolioPage({
           )}
         </CardContent>
       </Card>
+
+      {projects && projects.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="heading-serif text-xl font-semibold tracking-tight">
+            Projects
+          </h2>
+          <div className="space-y-4">
+            {projects.map((project) => (
+              <Card key={project.id}>
+                <CardContent className="space-y-4 p-6">
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                    <h3 className="text-lg font-semibold">{project.title}</h3>
+                    <div className="flex items-center gap-3 text-xs">
+                      {project.github_url && (
+                        <Link
+                          href={project.github_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                        >
+                          <Code2 className="size-3.5" />
+                          GitHub
+                        </Link>
+                      )}
+                      {project.live_url && (
+                        <Link
+                          href={project.live_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                        >
+                          <Globe className="size-3.5" />
+                          Live
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+
+                  {project.description && (
+                    <p className="text-sm leading-relaxed text-foreground/90">
+                      {project.description}
+                    </p>
+                  )}
+
+                  {project.tech_stack.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.tech_stack.map((tech) => (
+                        <span key={tech} className="badge-sage">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {project.screenshots.length > 0 && (
+                    <div className="-mx-2 flex snap-x snap-mandatory gap-3 overflow-x-auto px-2 pb-2">
+                      {project.screenshots
+                        .slice()
+                        .sort((a, b) => a.display_order - b.display_order)
+                        .map((shot) => (
+                          <div
+                            key={shot.id}
+                            className="relative aspect-video w-72 shrink-0 snap-start overflow-hidden rounded-md border bg-muted"
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={shot.image_url}
+                              alt={shot.alt_text ?? project.title}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
