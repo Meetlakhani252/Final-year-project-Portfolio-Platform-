@@ -20,7 +20,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link2, Globe } from "lucide-react";
+import { Globe } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 export function StepSocial() {
   const { data, updateData, prevStep } = useOnboardingStore();
@@ -84,7 +85,7 @@ export function StepSocial() {
 
           <div className="space-y-2">
             <Label htmlFor="github_url" className="flex items-center gap-2">
-              <Link2 className="size-4" />
+              <FaGithub className="size-4" />
               GitHub
             </Label>
             <Input
@@ -103,7 +104,7 @@ export function StepSocial() {
 
           <div className="space-y-2">
             <Label htmlFor="linkedin_url" className="flex items-center gap-2">
-              <Link2 className="size-4" />
+              <FaLinkedin className="size-4" />
               LinkedIn
             </Label>
             <Input

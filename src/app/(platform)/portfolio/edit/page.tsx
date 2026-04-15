@@ -29,6 +29,12 @@ export default async function PortfolioEditPage() {
     .eq("profile_id", user.id)
     .order("display_order");
 
+  const { data: skills } = await supabase
+    .from("skills")
+    .select("*")
+    .eq("profile_id", user.id)
+    .order("created_at", { ascending: true });
+
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6">
       <header>
@@ -38,7 +44,11 @@ export default async function PortfolioEditPage() {
           {profile.username}
         </p>
       </header>
-      <PortfolioEditTabs profile={profile} projects={projects ?? []} />
+      <PortfolioEditTabs
+        profile={profile}
+        projects={projects ?? []}
+        skills={skills ?? []}
+      />
     </div>
   );
 }

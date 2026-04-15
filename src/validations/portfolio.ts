@@ -61,6 +61,16 @@ export const projectSchema = z.object({
 
 export type ProjectInput = z.infer<typeof projectSchema>;
 
+export const skillSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Skill name is required")
+    .max(50, "Skill name must be at most 50 characters"),
+});
+
+export type SkillInput = z.infer<typeof skillSchema>;
+
 export const projectScreenshotFileSchema = z
   .instanceof(File)
   .refine(

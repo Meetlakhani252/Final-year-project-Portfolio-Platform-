@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Globe, Link as LinkIcon, Briefcase, Code2, AtSign } from "lucide-react";
+import { Globe, Link as LinkIcon } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 import { createClient } from "@/lib/supabase/server";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,10 +24,10 @@ function getInitials(name: string) {
 }
 
 const PLATFORM_ICON = {
-  github: Code2,
-  linkedin: Briefcase,
+  github: FaGithub,
+  linkedin: FaLinkedin,
   website: Globe,
-  twitter: AtSign,
+  twitter: FaXTwitter,
   other: LinkIcon,
 } as const;
 
@@ -62,6 +64,12 @@ export default async function PublicPortfolioPage({
     .from("social_links")
     .select("*")
     .eq("profile_id", profile.id);
+
+  const { data: skills } = await supabase
+    .from("skills")
+    .select("*")
+    .eq("profile_id", profile.id)
+    .order("created_at", { ascending: true });
 
   const { data: projects } = await supabase
     .from("projects")
@@ -132,6 +140,21 @@ export default async function PublicPortfolioPage({
         </CardContent>
       </Card>
 
+      {skills && skills.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="heading-serif text-xl font-semibold tracking-tight">
+            Skills
+          </h2>
+          <div className="flex flex-wrap gap-1.5">
+            {skills.map((skill) => (
+              <span key={skill.id} className="badge-sage">
+                {skill.name}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
+
       {projects && projects.length > 0 && (
         <section className="space-y-4">
           <h2 className="heading-serif text-xl font-semibold tracking-tight">
@@ -151,7 +174,7 @@ export default async function PublicPortfolioPage({
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
                         >
-                          <Code2 className="size-3.5" />
+                          <FaGithub className="size-3.5" />
                           GitHub
                         </Link>
                       )}

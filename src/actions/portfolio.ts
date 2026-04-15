@@ -8,6 +8,7 @@ import {
   avatarFileSchema,
   projectSchema,
   projectScreenshotFileSchema,
+  skillSchema,
   MAX_SCREENSHOTS_PER_PROJECT,
   type AboutInput,
   type ProjectInput,
@@ -408,6 +409,81 @@ export async function updateProject(
     if (ssError) {
       return { ok: false, error: "Failed to save screenshots." };
     }
+  }
+
+  const username = await getUsernameForRevalidate(supabase, user.id);
+  revalidatePortfolio(username);
+  return { ok: true };
+}
+
+// ---------- Skills ----------
+
+export async function addSkill(
+  name: string
+): Promise<ActionResult<{ id: string; name: string }>> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const parsed = skillSchema.safeParse({ name });
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0].message };
+  }
+
+  const cleanName = parsed.data.name;
+
+  const { data: existing } = await supabase
+    .from("skills")
+    .select("id")
+    .eq("profile_id", user.id)
+    .ilike("name", cleanName)
+    .maybeSingle();
+
+  if (existing) {
+    return { ok: false, error: "Skill already added" };
+  }
+
+  const { data: skill, error } = await supabase
+    .from("skills")
+    .insert({
+      profile_id: user.id,
+      name: cleanName,
+      source: "manual",
+    })
+    .select("id, name")
+    .single();
+
+  if (error || !skill) {
+    return { ok: false, error: "Failed to add skill." };
+  }
+
+  const username = await getUsernameForRevalidate(supabase, user.id);
+  revalidatePortfolio(username);
+  return { ok: true, data: { id: skill.id, name: skill.name } };
+}
+
+export async function removeSkill(id: string): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: existing } = await supabase
+    .from("skills")
+    .select("id, profile_id")
+    .eq("id", id)
+    .single();
+
+  if (!existing || existing.profile_id !== user.id) {
+    return { ok: false, error: "Skill not found." };
+  }
+
+  const { error } = await supabase.from("skills").delete().eq("id", id);
+  if (error) {
+    return { ok: false, error: "Failed to remove skill." };
   }
 
   const username = await getUsernameForRevalidate(supabase, user.id);

@@ -3,7 +3,12 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AboutForm } from "@/components/portfolio/about-form";
 import { ProjectsTab } from "@/components/portfolio/projects-tab";
-import type { Profile, ProjectWithScreenshots } from "@/types/portfolio";
+import { SkillsTab } from "@/components/portfolio/skills-tab";
+import type {
+  Profile,
+  ProjectWithScreenshots,
+  Skill,
+} from "@/types/portfolio";
 
 const SECTIONS = [
   { value: "about", label: "About" },
@@ -16,9 +21,11 @@ const SECTIONS = [
 export function PortfolioEditTabs({
   profile,
   projects,
+  skills,
 }: {
   profile: Profile;
   projects: ProjectWithScreenshots[];
+  skills: Skill[];
 }) {
   return (
     <Tabs defaultValue="about" className="w-full">
@@ -38,8 +45,13 @@ export function PortfolioEditTabs({
         <ProjectsTab projects={projects} />
       </TabsContent>
 
+      <TabsContent value="skills" className="mt-6">
+        <SkillsTab skills={skills} />
+      </TabsContent>
+
       {SECTIONS.filter(
-        (s) => s.value !== "about" && s.value !== "projects"
+        (s) =>
+          s.value !== "about" && s.value !== "projects" && s.value !== "skills"
       ).map((s) => (
         <TabsContent key={s.value} value={s.value} className="mt-6">
           <div className="rounded-md border border-dashed p-8 text-center text-sm text-muted-foreground">
