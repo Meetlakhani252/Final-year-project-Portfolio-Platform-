@@ -7,6 +7,7 @@ import {
   ExternalLink,
   GraduationCap,
   FileText,
+  History,
 } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -513,6 +514,17 @@ export default async function PublicPortfolioPage({
         if (!renderer) return null;
         return renderer();
       })}
+
+      {/* Journey link */}
+      <div className="border-t pt-6 text-center">
+        <Link
+          href={`/u/${username}/journey`}
+          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <History className="size-3.5" />
+          View portfolio journey
+        </Link>
+      </div>
     </main>
   );
 }

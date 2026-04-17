@@ -22,6 +22,7 @@ import {
   type SocialLinksInput,
 } from "@/validations/portfolio";
 import { MAX_IMAGE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/lib/constants";
+import { createPortfolioSnapshot } from "@/lib/snapshots";
 
 const PROJECT_IMAGES_BUCKET = "project-images";
 
@@ -318,6 +319,14 @@ export async function addProject(
   const username = await getUsernameForRevalidate(supabase, user.id);
   revalidatePortfolio(username);
 
+  // Fire-and-forget snapshot — don't block the response
+  createPortfolioSnapshot(
+    supabase,
+    user.id,
+    "project_added",
+    `Added project: ${parsed.data.title}`
+  ).catch(() => {});
+
   return { ok: true, data: { id: project.id } };
 }
 
@@ -540,6 +549,15 @@ export async function addCertification(
 
   const username = await getUsernameForRevalidate(supabase, user.id);
   revalidatePortfolio(username);
+
+  // Fire-and-forget snapshot — don't block the response
+  createPortfolioSnapshot(
+    supabase,
+    user.id,
+    "certification_added",
+    `Added certification: ${parsed.data.name}`
+  ).catch(() => {});
+
   return { ok: true, data: { id: cert.id } };
 }
 
