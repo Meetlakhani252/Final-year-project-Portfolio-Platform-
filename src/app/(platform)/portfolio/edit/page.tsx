@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PortfolioEditTabs } from "@/components/portfolio/portfolio-edit-tabs";
@@ -35,6 +36,43 @@ export default async function PortfolioEditPage() {
     .eq("profile_id", user.id)
     .order("created_at", { ascending: true });
 
+  const { data: certifications } = await supabase
+    .from("certifications")
+    .select("*")
+    .eq("profile_id", user.id)
+    .order("display_order");
+
+  const { data: education } = await supabase
+    .from("education")
+    .select("*")
+    .eq("profile_id", user.id)
+    .order("display_order");
+
+  const { data: blogPosts } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("profile_id", user.id)
+    .order("created_at", { ascending: false });
+
+  const { data: photos } = await supabase
+    .from("portfolio_photos")
+    .select("*")
+    .eq("profile_id", user.id)
+    .order("display_order");
+
+  const { data: socialLinks } = await supabase
+    .from("social_links")
+    .select("*")
+    .eq("profile_id", user.id);
+
+  const { data: sectionOrderRow } = await supabase
+    .from("portfolio_section_order")
+    .select("section_order")
+    .eq("profile_id", user.id)
+    .maybeSingle();
+
+  const sectionOrder = sectionOrderRow?.section_order ?? [];
+
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6">
       <header>
@@ -44,11 +82,19 @@ export default async function PortfolioEditPage() {
           {profile.username}
         </p>
       </header>
-      <PortfolioEditTabs
-        profile={profile}
-        projects={projects ?? []}
-        skills={skills ?? []}
-      />
+      <Suspense>
+        <PortfolioEditTabs
+          profile={profile}
+          projects={projects ?? []}
+          skills={skills ?? []}
+          certifications={certifications ?? []}
+          education={education ?? []}
+          blogPosts={blogPosts ?? []}
+          photos={photos ?? []}
+          socialLinks={socialLinks ?? []}
+          sectionOrder={sectionOrder}
+        />
+      </Suspense>
     </div>
   );
 }

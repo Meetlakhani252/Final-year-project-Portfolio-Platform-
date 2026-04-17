@@ -71,6 +71,95 @@ export const skillSchema = z.object({
 
 export type SkillInput = z.infer<typeof skillSchema>;
 
+export const certificationSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Name must be at least 2 characters")
+    .max(150, "Name must be at most 150 characters"),
+  issuer: z
+    .string()
+    .trim()
+    .min(2, "Issuer must be at least 2 characters")
+    .max(150, "Issuer must be at most 150 characters"),
+  issue_date: z.string().nullable().optional(),
+  credential_url: z
+    .string()
+    .trim()
+    .refine((val) => !val || /^https?:\/\/.+/.test(val), {
+      message: "Enter a valid URL (http:// or https://)",
+    })
+    .optional(),
+});
+
+export type CertificationInput = z.infer<typeof certificationSchema>;
+
+export const educationSchema = z.object({
+  institution: z
+    .string()
+    .trim()
+    .min(2, "Institution must be at least 2 characters")
+    .max(200, "Institution must be at most 200 characters"),
+  degree: z
+    .string()
+    .trim()
+    .min(2, "Degree must be at least 2 characters")
+    .max(200, "Degree must be at most 200 characters"),
+  field_of_study: z
+    .string()
+    .trim()
+    .max(200, "Field of study must be at most 200 characters")
+    .optional(),
+  start_date: z.string().nullable().optional(),
+  end_date: z.string().nullable().optional(),
+  gpa: z
+    .number()
+    .min(0, "GPA must be at least 0")
+    .max(10, "GPA must be at most 10")
+    .nullable()
+    .optional(),
+  courses: z
+    .array(z.string().trim().min(1).max(100))
+    .max(30, "At most 30 courses")
+    .optional(),
+});
+
+export type EducationInput = z.infer<typeof educationSchema>;
+
+export const blogPostSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(2, "Title must be at least 2 characters")
+    .max(200, "Title must be at most 200 characters"),
+  slug: z
+    .string()
+    .trim()
+    .min(2, "Slug must be at least 2 characters")
+    .max(200, "Slug must be at most 200 characters")
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase with hyphens"),
+  content: z.any(),
+  content_plain: z.string().nullable().optional(),
+});
+
+export type BlogPostInput = z.infer<typeof blogPostSchema>;
+
+export const socialLinksSchema = z.object({
+  links: z.array(
+    z.object({
+      platform: z.enum(["github", "linkedin", "website", "twitter", "other"]),
+      url: z
+        .string()
+        .trim()
+        .refine((val) => !val || /^https?:\/\/.+/.test(val), {
+          message: "Enter a valid URL",
+        }),
+    })
+  ),
+});
+
+export type SocialLinksInput = z.infer<typeof socialLinksSchema>;
+
 export const projectScreenshotFileSchema = z
   .instanceof(File)
   .refine(
