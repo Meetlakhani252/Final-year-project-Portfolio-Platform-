@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Bell, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/logo";
@@ -41,12 +42,10 @@ export function TopNavbar({
             variant="ghost"
             size="icon"
             className="relative min-h-[44px] min-w-[44px]"
+            render={<Link href="/messages" />}
           >
             <MessageSquare className="size-5" />
             <span className="sr-only">Messages</span>
-            <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
-              0
-            </span>
           </Button>
         )}
 

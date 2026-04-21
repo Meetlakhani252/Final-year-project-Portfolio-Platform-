@@ -9,8 +9,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-lora);
-  --font-serif: var(--font-lora);
+  --font-heading: var(--font-sans);
+  --font-serif: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -48,157 +48,141 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Sage scale */
-  --color-sage-50: #F0F5F1;
-  --color-sage-100: #D9E8DC;
-  --color-sage-200: #B5D1BC;
-  --color-sage-300: #8FBA9A;
-  --color-sage-400: #6EA37D;
-  --color-sage-500: #4D7C5F;
-  --color-sage-600: #3D634C;
-  --color-sage-700: #2E4A39;
-  --color-sage-800: #1F3226;
-  --color-sage-900: #0F1913;
-
-  /* Amber scale */
-  --color-amber-50: #FFFBEB;
-  --color-amber-100: #FEF3C7;
-  --color-amber-200: #FDE68A;
-  --color-amber-300: #FCD34D;
-  --color-amber-400: #FBBF24;
-  --color-amber-500: #D97706;
-  --color-amber-600: #B45309;
-  --color-amber-700: #92400E;
-  --color-amber-800: #78350F;
-  --color-amber-900: #451A03;
-
-  /* Stone scale */
-  --color-stone-50: #FAFAF9;
-  --color-stone-100: #F5F5F4;
-  --color-stone-200: #E7E5E4;
-  --color-stone-300: #D6D3D1;
-  --color-stone-400: #A8A29E;
-  --color-stone-500: #78716C;
-  --color-stone-600: #57534E;
-  --color-stone-700: #44403C;
-  --color-stone-800: #292524;
-  --color-stone-900: #1C1917;
-  --color-stone-950: #0C0A09;
+  /* Blue palette — derived from #ECEEF0 / #CCD4DE / #323954 / #08112F / #3E53A0 / #5A77DF */
+  --color-blue-50:  #EEF1FB;
+  --color-blue-100: #ECEEF0;
+  --color-blue-200: #CCD4DE;
+  --color-blue-300: #9EB2D0;
+  --color-blue-400: #7090C8;
+  --color-blue-500: #5A77DF;
+  --color-blue-600: #4A63C0;
+  --color-blue-700: #3E53A0;
+  --color-blue-800: #323954;
+  --color-blue-900: #08112F;
 }
 
+/* ============================================================
+   LIGHT MODE
+   ============================================================ */
 :root {
   /* Base */
-  --background: #FAFAF9;
-  --foreground: #1C1917;
+  --background: #ECEEF0;
+  --foreground: #08112F;
 
   /* Card */
   --card: #FFFFFF;
-  --card-foreground: #1C1917;
+  --card-foreground: #08112F;
 
   /* Popover */
   --popover: #FFFFFF;
-  --popover-foreground: #1C1917;
+  --popover-foreground: #08112F;
 
-  /* Primary — Sage Green */
-  --primary: #4D7C5F;
+  /* Primary — #5A77DF */
+  --primary: #5A77DF;
   --primary-foreground: #FFFFFF;
 
   /* Secondary */
-  --secondary: #F5F5F4;
-  --secondary-foreground: #1C1917;
+  --secondary: #CCD4DE;
+  --secondary-foreground: #323954;
 
   /* Muted */
-  --muted: #F5F5F4;
-  --muted-foreground: #78716C;
+  --muted: #ECEEF0;
+  --muted-foreground: #323954;
 
-  /* Accent — Amber */
-  --accent: #D97706;
+  /* Accent — #3E53A0 */
+  --accent: #3E53A0;
   --accent-foreground: #FFFFFF;
 
   /* Destructive */
   --destructive: #DC2626;
 
   /* Border / Input / Ring */
-  --border: #E7E5E4;
-  --input: #E7E5E4;
-  --ring: #4D7C5F;
+  --border: #CCD4DE;
+  --input: #CCD4DE;
+  --ring: #5A77DF;
 
   /* Radius */
-  --radius: 0.625rem;
+  --radius: 0.75rem;
 
   /* Charts */
-  --chart-1: #4D7C5F;
-  --chart-2: #D97706;
-  --chart-3: #8FBA9A;
-  --chart-4: #FCD34D;
-  --chart-5: #78716C;
+  --chart-1: #5A77DF;
+  --chart-2: #3E53A0;
+  --chart-3: #9EB2D0;
+  --chart-4: #CCD4DE;
+  --chart-5: #323954;
 
   /* Sidebar */
-  --sidebar: #F5F5F4;
-  --sidebar-foreground: #1C1917;
-  --sidebar-primary: #4D7C5F;
+  --sidebar: #ECEEF0;
+  --sidebar-foreground: #08112F;
+  --sidebar-primary: #5A77DF;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #D9E8DC;
-  --sidebar-accent-foreground: #1C1917;
-  --sidebar-border: #E7E5E4;
-  --sidebar-ring: #4D7C5F;
+  --sidebar-accent: #CCD4DE;
+  --sidebar-accent-foreground: #323954;
+  --sidebar-border: #CCD4DE;
+  --sidebar-ring: #5A77DF;
 }
 
+/* ============================================================
+   DARK MODE
+   ============================================================ */
 .dark {
-  /* Base — warm dark, NOT cold black */
-  --background: #1C1917;
-  --foreground: #FAFAF9;
+  /* Base — cool dark navy */
+  --background: #0D1530;
+  --foreground: #ECEEF0;
 
   /* Card */
-  --card: #292524;
-  --card-foreground: #FAFAF9;
+  --card: #172044;
+  --card-foreground: #ECEEF0;
 
   /* Popover */
-  --popover: #292524;
-  --popover-foreground: #FAFAF9;
+  --popover: #172044;
+  --popover-foreground: #ECEEF0;
 
-  /* Primary — lighter sage for dark mode */
-  --primary: #6EBF8B;
-  --primary-foreground: #0F1913;
+  /* Primary — same blue */
+  --primary: #5A77DF;
+  --primary-foreground: #FFFFFF;
 
   /* Secondary */
-  --secondary: #44403C;
-  --secondary-foreground: #FAFAF9;
+  --secondary: #3E53A0;
+  --secondary-foreground: #ECEEF0;
 
   /* Muted */
-  --muted: #44403C;
-  --muted-foreground: #A8A29E;
+  --muted: #1B2748;
+  --muted-foreground: #CCD4DE;
 
-  /* Accent — brighter amber for dark mode */
-  --accent: #FBBF24;
-  --accent-foreground: #451A03;
+  /* Accent */
+  --accent: #3E53A0;
+  --accent-foreground: #ECEEF0;
 
   /* Destructive */
   --destructive: #EF4444;
 
   /* Border / Input / Ring */
-  --border: #44403C;
-  --input: #44403C;
-  --ring: #6EBF8B;
+  --border: #323954;
+  --input: #323954;
+  --ring: #5A77DF;
 
   /* Charts */
-  --chart-1: #6EBF8B;
-  --chart-2: #FBBF24;
-  --chart-3: #8FBA9A;
-  --chart-4: #FCD34D;
-  --chart-5: #A8A29E;
+  --chart-1: #5A77DF;
+  --chart-2: #7090C8;
+  --chart-3: #9EB2D0;
+  --chart-4: #CCD4DE;
+  --chart-5: #3E53A0;
 
-  /* Sidebar */
-  --sidebar: #292524;
-  --sidebar-foreground: #FAFAF9;
-  --sidebar-primary: #6EBF8B;
-  --sidebar-primary-foreground: #0F1913;
-  --sidebar-accent: #44403C;
-  --sidebar-accent-foreground: #FAFAF9;
-  --sidebar-border: #44403C;
-  --sidebar-ring: #6EBF8B;
+  /* Sidebar — darkest navy from palette */
+  --sidebar: #08112F;
+  --sidebar-foreground: #ECEEF0;
+  --sidebar-primary: #5A77DF;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #3E53A0;
+  --sidebar-accent-foreground: #ECEEF0;
+  --sidebar-border: #323954;
+  --sidebar-ring: #5A77DF;
 }
 
+/* ============================================================
+   BASE LAYER
+   ============================================================ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -210,42 +194,66 @@
     @apply font-sans;
   }
 
-  h1, h2 {
-    font-family: var(--font-lora), ui-serif, serif;
-    font-weight: 500;
-    letter-spacing: -0.025em;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 }
 
+/* ============================================================
+   UTILITIES
+   ============================================================ */
 @layer utilities {
   .heading-serif {
-    font-family: var(--font-lora), ui-serif, serif;
-    font-weight: 500;
-    letter-spacing: -0.025em;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 
   .card-warm {
     background-color: var(--card);
-    border: 1px solid #E7E5E4;
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
   }
 
+  /* Badge — blue light (replaces badge-sage) */
   .badge-sage {
-    background-color: #D9E8DC;
-    color: #2E4A39;
-    border: 1px solid #B5D1BC;
+    background-color: #E8EDF9;
+    color: #3E53A0;
+    border: 1px solid #CCD4DE;
+    border-radius: 9999px;
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
   }
 
+  /* Badge — medium blue (replaces badge-amber) */
   .badge-amber {
-    background-color: #FEF3C7;
-    color: #92400E;
-    border: 1px solid #FDE68A;
+    background-color: #dce5f8;
+    color: #3E53A0;
+    border: 1px solid #b3c4ee;
+    border-radius: 9999px;
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
   }
 
+  /* Badge — neutral (replaces badge-stone) */
   .badge-stone {
-    background-color: #F5F5F4;
-    color: #57534E;
-    border: 1px solid #E7E5E4;
+    background-color: #ECEEF0;
+    color: #323954;
+    border: 1px solid #CCD4DE;
+    border-radius: 9999px;
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
   }
 
   .section-container {
@@ -270,25 +278,26 @@
     }
   }
 
+  /* Dark mode badge overrides */
   .dark .badge-sage {
-    background-color: #1F3226;
-    color: #8FBA9A;
-    border-color: #2E4A39;
+    background-color: #1B2748;
+    color: #9EB2D0;
+    border-color: #323954;
   }
 
   .dark .badge-amber {
-    background-color: #78350F;
-    color: #FCD34D;
-    border-color: #92400E;
+    background-color: #1B2748;
+    color: #5A77DF;
+    border-color: #323954;
   }
 
   .dark .badge-stone {
-    background-color: #44403C;
-    color: #D6D3D1;
-    border-color: #57534E;
+    background-color: #172044;
+    color: #CCD4DE;
+    border-color: #323954;
   }
 
   .dark .card-warm {
-    border-color: #44403C;
+    border-color: #323954;
   }
 }

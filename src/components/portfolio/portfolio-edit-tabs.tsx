@@ -10,7 +10,6 @@ import { EducationTab } from "@/components/portfolio/education-tab";
 import { BlogTab } from "@/components/portfolio/blog-tab";
 import { PhotosTab } from "@/components/portfolio/photos-tab";
 import { SocialLinksTab } from "@/components/portfolio/social-links-tab";
-import { SectionReorder } from "@/components/portfolio/section-reorder";
 import type {
   Profile,
   ProjectWithScreenshots,
@@ -31,7 +30,6 @@ const SECTIONS = [
   { value: "blog", label: "Blog" },
   { value: "photos", label: "Photos" },
   { value: "social", label: "Social" },
-  { value: "reorder", label: "Reorder" },
 ] as const;
 
 export function PortfolioEditTabs({
@@ -43,7 +41,6 @@ export function PortfolioEditTabs({
   blogPosts,
   photos,
   socialLinks,
-  sectionOrder,
 }: {
   profile: Profile;
   projects: ProjectWithScreenshots[];
@@ -53,7 +50,6 @@ export function PortfolioEditTabs({
   blogPosts: BlogPost[];
   photos: PortfolioPhoto[];
   socialLinks: SocialLink[];
-  sectionOrder: string[];
 }) {
   const searchParams = useSearchParams();
   const defaultTab = searchParams.get("tab") ?? "about";
@@ -100,9 +96,7 @@ export function PortfolioEditTabs({
         <SocialLinksTab socialLinks={socialLinks} />
       </TabsContent>
 
-      <TabsContent value="reorder" className="mt-6">
-        <SectionReorder initialOrder={sectionOrder} />
-      </TabsContent>
+
     </Tabs>
   );
 }

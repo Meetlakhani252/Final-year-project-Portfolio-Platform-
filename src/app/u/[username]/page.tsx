@@ -15,6 +15,10 @@ import { FaXTwitter } from "react-icons/fa6";
 import { createClient } from "@/lib/supabase/server";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import { BackButton } from "@/components/portfolio/back-button";
+import { ProfileSidebar } from "@/components/portfolio/profile-sidebar";
+import { CommentSection } from "@/components/portfolio/comment-section";
+import { MessageSquare } from "lucide-react";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -29,6 +33,17 @@ const DEFAULT_SECTION_ORDER = [
   "photos",
   "social",
 ];
+
+const SECTION_LABELS: Record<string, string> = {
+  about: "About",
+  skills: "Skills",
+  projects: "Projects",
+  certifications: "Certifications",
+  education: "Education",
+  blog: "Blog",
+  photos: "Photos",
+  social: "Connect",
+};
 
 function getInitials(name: string) {
   return (
@@ -77,6 +92,21 @@ export default async function PublicPortfolioPage({
 
   if (!profile) {
     notFound();
+  }
+
+  // Fetch current viewer (needed for comment permissions)
+  const {
+    data: { user: currentUser },
+  } = await supabase.auth.getUser();
+
+  let currentUserRole: string | null = null;
+  if (currentUser) {
+    const { data: currentProfile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", currentUser.id)
+      .single();
+    currentUserRole = currentProfile?.role ?? null;
   }
 
   const [
@@ -138,52 +168,67 @@ export default async function PublicPortfolioPage({
 
   const sectionRenderers: Record<string, () => React.ReactNode> = {
     about: () => (
-      <Card key="about">
-        <CardContent className="space-y-6 p-6 sm:p-8">
-          <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
-            <Avatar className="size-24">
-              {profile.avatar_url && (
-                <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
-              )}
-              <AvatarFallback className="text-xl">
-                {getInitials(profile.full_name)}
-              </AvatarFallback>
-            </Avatar>
+      <div id="about">
+        <Card>
+          <CardContent className="space-y-6 p-6 sm:p-8">
+            <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
+              <Avatar className="size-24">
+                {profile.avatar_url && (
+                  <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
+                )}
+                <AvatarFallback className="text-xl">
+                  {getInitials(profile.full_name)}
+                </AvatarFallback>
+              </Avatar>
 
-            <div className="flex-1 space-y-1">
-              <h1 className="text-2xl font-semibold tracking-tight">
-                {profile.full_name}
-              </h1>
-              <p className="text-sm text-muted-foreground">@{profile.username}</p>
-              {(profile.program || profile.university) && (
-                <p className="text-sm">
-                  {[profile.program, profile.university]
-                    .filter(Boolean)
-                    .join(" · ")}
-                  {profile.graduation_year ? ` · ${profile.graduation_year}` : ""}
-                </p>
-              )}
-              {profile.gpa_public && profile.gpa != null && (
-                <p className="text-sm text-muted-foreground">
-                  GPA: {profile.gpa.toFixed(2)}
-                </p>
-              )}
+              <div className="flex-1 space-y-1">
+                <h1 className="text-2xl font-semibold tracking-tight">
+                  {profile.full_name}
+                </h1>
+                <p className="text-sm text-muted-foreground">@{profile.username}</p>
+                {(profile.program || profile.university) && (
+                  <p className="text-sm">
+                    {[profile.program, profile.university]
+                      .filter(Boolean)
+                      .join(" · ")}
+                    {profile.graduation_year ? ` · ${profile.graduation_year}` : ""}
+                  </p>
+                )}
+                {profile.gpa_public && profile.gpa != null && (
+                  <p className="text-sm text-muted-foreground">
+                    GPA: {profile.gpa.toFixed(2)}
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
 
-          {profile.bio && (
-            <p className="text-sm leading-relaxed text-foreground/90">
-              {profile.bio}
-            </p>
-          )}
-        </CardContent>
-      </Card>
+            {profile.bio && (
+              <p className="text-sm leading-relaxed text-foreground/90">
+                {profile.bio}
+              </p>
+            )}
+
+            {/* Send Message button — shown to logged-in users viewing someone else's portfolio */}
+            {currentUser && currentUser.id !== profile.id && (
+              <div>
+                <Link
+                  href={`/messages?with=${profile.id}`}
+                  className="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
+                >
+                  <MessageSquare className="size-3.5" />
+                  Send Message
+                </Link>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     ),
 
     social: () => {
       if (!socialLinks || socialLinks.length === 0) return null;
       return (
-        <section key="social" className="space-y-4">
+        <section id="social" className="space-y-4">
           <h2 className="heading-serif text-xl font-semibold tracking-tight">
             Connect
           </h2>
@@ -213,7 +258,7 @@ export default async function PublicPortfolioPage({
     skills: () => {
       if (!skills || skills.length === 0) return null;
       return (
-        <section key="skills" className="space-y-4">
+        <section id="skills" className="space-y-4">
           <h2 className="heading-serif text-xl font-semibold tracking-tight">
             Skills
           </h2>
@@ -231,7 +276,7 @@ export default async function PublicPortfolioPage({
     certifications: () => {
       if (!certifications || certifications.length === 0) return null;
       return (
-        <section key="certifications" className="space-y-4">
+        <section id="certifications" className="space-y-4">
           <h2 className="heading-serif text-xl font-semibold tracking-tight">
             Certifications
           </h2>
@@ -280,7 +325,7 @@ export default async function PublicPortfolioPage({
     education: () => {
       if (!education || education.length === 0) return null;
       return (
-        <section key="education" className="space-y-4">
+        <section id="education" className="space-y-4">
           <h2 className="heading-serif text-xl font-semibold tracking-tight">
             Education
           </h2>
@@ -346,7 +391,7 @@ export default async function PublicPortfolioPage({
     projects: () => {
       if (!projects || projects.length === 0) return null;
       return (
-        <section key="projects" className="space-y-4">
+        <section id="projects" className="space-y-4">
           <h2 className="heading-serif text-xl font-semibold tracking-tight">
             Projects
           </h2>
@@ -421,6 +466,14 @@ export default async function PublicPortfolioPage({
                         ))}
                     </div>
                   )}
+
+                  <CommentSection
+                    targetType="project"
+                    targetId={project.id}
+                    currentUserId={currentUser?.id ?? null}
+                    currentUserRole={currentUserRole}
+                    portfolioOwnerId={profile.id}
+                  />
                 </CardContent>
               </Card>
             ))}
@@ -432,7 +485,7 @@ export default async function PublicPortfolioPage({
     blog: () => {
       if (!blogPosts || blogPosts.length === 0) return null;
       return (
-        <section key="blog" className="space-y-4">
+        <section id="blog" className="space-y-4">
           <h2 className="heading-serif text-xl font-semibold tracking-tight">
             Blog
           </h2>
@@ -476,7 +529,7 @@ export default async function PublicPortfolioPage({
     photos: () => {
       if (!photos || photos.length === 0) return null;
       return (
-        <section key="photos" className="space-y-4">
+        <section id="photos" className="space-y-4">
           <h2 className="heading-serif text-xl font-semibold tracking-tight">
             Photos
           </h2>
@@ -493,7 +546,7 @@ export default async function PublicPortfolioPage({
                   className="h-full w-full object-cover transition-transform group-hover:scale-105"
                 />
                 {photo.caption && (
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                  <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent p-2">
                     <p className="truncate text-xs text-white">
                       {photo.caption}
                     </p>
@@ -507,24 +560,54 @@ export default async function PublicPortfolioPage({
     },
   };
 
-  return (
-    <main className="mx-auto w-full max-w-3xl space-y-8 px-4 py-10 sm:py-16">
-      {sectionOrder.map((section) => {
-        const renderer = sectionRenderers[section];
-        if (!renderer) return null;
-        return renderer();
-      })}
+  // Pre-compute which sections render (have content) for sidebar + dividers
+  const renderedSections: Array<{ id: string; element: React.ReactNode }> = [];
+  for (const section of sectionOrder) {
+    const renderer = sectionRenderers[section];
+    if (!renderer) continue;
+    const element = renderer();
+    if (element) renderedSections.push({ id: section, element });
+  }
 
-      {/* Journey link */}
-      <div className="border-t pt-6 text-center">
-        <Link
-          href={`/u/${username}/journey`}
-          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <History className="size-3.5" />
-          View portfolio journey
-        </Link>
+  const activeSections = renderedSections.map(({ id }) => ({
+    id,
+    label: SECTION_LABELS[id] ?? id,
+  }));
+
+  return (
+    <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:py-12">
+      {/* Back button */}
+      <div className="mb-6">
+        <BackButton />
       </div>
-    </main>
+
+      <div className="flex gap-10">
+        {/* Sticky sidebar nav */}
+        <ProfileSidebar sections={activeSections} />
+
+        {/* Main content with dividers between sections */}
+        <div className="min-w-0 flex-1">
+          {renderedSections.map(({ id, element }, i) => (
+            <div
+              key={id}
+              className={i > 0 ? "mt-8 border-t pt-8" : ""}
+            >
+              {element}
+            </div>
+          ))}
+
+          {/* Journey link */}
+          <div className="mt-8 border-t pt-6 text-center">
+            <Link
+              href={`/u/${username}/journey`}
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <History className="size-3.5" />
+              View portfolio journey
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -742,6 +742,7 @@ export type Database = {
           profile_id: string;
           content: Json;
           is_flagged: boolean;
+          flag_count: number;
           created_at: string;
           updated_at: string;
         };
@@ -751,6 +752,7 @@ export type Database = {
           profile_id: string;
           content: Json;
           is_flagged?: boolean;
+          flag_count?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -760,6 +762,7 @@ export type Database = {
           profile_id?: string;
           content?: Json;
           is_flagged?: boolean;
+          flag_count?: number;
           created_at?: string;
           updated_at?: string;
         };

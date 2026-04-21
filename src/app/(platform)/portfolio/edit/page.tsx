@@ -65,14 +65,6 @@ export default async function PortfolioEditPage() {
     .select("*")
     .eq("profile_id", user.id);
 
-  const { data: sectionOrderRow } = await supabase
-    .from("portfolio_section_order")
-    .select("section_order")
-    .eq("profile_id", user.id)
-    .maybeSingle();
-
-  const sectionOrder = sectionOrderRow?.section_order ?? [];
-
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6">
       <header>
@@ -92,7 +84,6 @@ export default async function PortfolioEditPage() {
           blogPosts={blogPosts ?? []}
           photos={photos ?? []}
           socialLinks={socialLinks ?? []}
-          sectionOrder={sectionOrder}
         />
       </Suspense>
     </div>

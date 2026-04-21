@@ -1,21 +1,19 @@
 import { getUser } from "@/lib/get-user";
-import { STUDENT_NAV, RECRUITER_NAV, ORGANIZER_NAV } from "@/lib/nav-config";
+import { STUDENT_NAV, RECRUITER_NAV } from "@/lib/nav-config";
 import { TopNavbar } from "@/components/shared/top-navbar";
 import { DesktopSidebar } from "@/components/shared/desktop-sidebar";
 
-function getNav(role: string) {
-  if (role === "recruiter") return RECRUITER_NAV;
-  if (role === "organizer") return ORGANIZER_NAV;
-  return STUDENT_NAV;
-}
+export const metadata = {
+  title: "Forums — StudentPortfolio",
+};
 
-export default async function PlatformLayout({
+export default async function ForumsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const user = await getUser();
-  const nav = getNav(user.role);
+  const nav = user.role === "recruiter" ? RECRUITER_NAV : STUDENT_NAV;
 
   return (
     <div className="flex h-screen flex-col">

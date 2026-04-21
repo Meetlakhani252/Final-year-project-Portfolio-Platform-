@@ -1024,7 +1024,8 @@ export async function uploadPortfolioPhoto(
     .upload(path, file, { contentType: file.type });
 
   if (uploadError) {
-    return { ok: false, error: "Failed to upload photo." };
+    console.error("Portfolio photo upload error:", uploadError);
+    return { ok: false, error: `Failed to upload photo: ${uploadError.message}` };
   }
 
   const {

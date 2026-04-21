@@ -24,7 +24,10 @@ export async function signUp(data: SignUpInput): Promise<AuthResult> {
 
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signUp({
+  // Clear any existing session so the old user's cookies don't persist
+  await supabase.auth.signOut();
+
+  const { data: signUpData, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
@@ -43,6 +46,11 @@ export async function signUp(data: SignUpInput): Promise<AuthResult> {
     return { error: error.message };
   }
 
+  // If email confirmation is required, session is null — tell the user to check email
+  if (!signUpData.session) {
+    return { error: "CHECK_EMAIL" };
+  }
+
   redirect("/onboarding");
 }
 
@@ -56,7 +64,9 @@ export async function recruiterSignUp(
 
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signUp({
+  await supabase.auth.signOut();
+
+  const { data: signUpData, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
@@ -76,7 +86,19 @@ export async function recruiterSignUp(
     return { error: error.message };
   }
 
-  redirect("/onboarding");
+  if (!signUpData.session) {
+    return { error: "CHECK_EMAIL" };
+  }
+
+  // Recruiters and organizers skip the student onboarding wizard
+  if (signUpData.user) {
+    await supabase
+      .from("profiles")
+      .update({ onboarding_completed: true })
+      .eq("id", signUpData.user.id);
+  }
+
+  redirect("/dashboard");
 }
 
 export async function signIn(data: SignInInput): Promise<AuthResult> {
@@ -96,20 +118,24 @@ export async function signIn(data: SignInInput): Promise<AuthResult> {
     return { error: "Invalid email or password" };
   }
 
-  // Check if user has completed onboarding
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("onboarding_completed")
-      .eq("id", user.id)
-      .single();
+    const userRole = (user.user_metadata?.role as string) ?? "student";
 
-    if (profile && !profile.onboarding_completed) {
-      redirect("/onboarding");
+    // Only students go through onboarding; recruiters/organizers go straight to dashboard
+    if (userRole === "student") {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("id", user.id)
+        .single();
+
+      if (profile && !profile.onboarding_completed) {
+        redirect("/onboarding");
+      }
     }
   }
 

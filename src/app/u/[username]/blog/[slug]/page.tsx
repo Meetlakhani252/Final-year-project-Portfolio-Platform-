@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/server";
 import { BlogContentRenderer } from "@/components/portfolio/blog-content-renderer";
+import { CommentSection } from "@/components/portfolio/comment-section";
 import type { JSONContent } from "novel";
 
 export const revalidate = 3600;
@@ -70,6 +71,20 @@ export default async function PublicBlogPostPage({
     notFound();
   }
 
+  const {
+    data: { user: currentUser },
+  } = await supabase.auth.getUser();
+
+  let currentUserRole: string | null = null;
+  if (currentUser) {
+    const { data: currentProfile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", currentUser.id)
+      .single();
+    currentUserRole = currentProfile?.role ?? null;
+  }
+
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
       <Link
@@ -102,6 +117,16 @@ export default async function PublicBlogPostPage({
 
         <BlogContentRenderer content={post.content as JSONContent} />
       </article>
+
+      <section className="mt-10 border-t pt-8">
+        <CommentSection
+          targetType="blog_post"
+          targetId={post.id}
+          currentUserId={currentUser?.id ?? null}
+          currentUserRole={currentUserRole}
+          portfolioOwnerId={profile.id}
+        />
+      </section>
     </main>
   );
 }

@@ -22,6 +22,7 @@ import { PLATFORM_NAME } from "@/lib/constants";
 export default function SignUpPage() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [checkEmail, setCheckEmail] = useState(false);
 
   const {
     register,
@@ -35,7 +36,9 @@ export default function SignUpPage() {
     setError(null);
     startTransition(async () => {
       const result = await signUp(data);
-      if (result?.error) {
+      if (result?.error === "CHECK_EMAIL") {
+        setCheckEmail(true);
+      } else if (result?.error) {
         setError(result.error);
       }
     });
@@ -49,6 +52,25 @@ export default function SignUpPage() {
         setError(result.error);
       }
     });
+  }
+
+  if (checkEmail) {
+    return (
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Check your email</CardTitle>
+          <CardDescription>
+            We sent a confirmation link to your email address. Click it to
+            activate your account, then sign in.
+          </CardDescription>
+        </CardHeader>
+        <CardFooter className="justify-center">
+          <Link href="/login" className="text-sm text-primary hover:underline">
+            Go to sign in
+          </Link>
+        </CardFooter>
+      </Card>
+    );
   }
 
   return (

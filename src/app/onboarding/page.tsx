@@ -12,6 +12,12 @@ export default async function OnboardingPage() {
     redirect("/login");
   }
 
+  // Onboarding is student-only; other roles go straight to their dashboard
+  const userRole = (user.user_metadata?.role as string) ?? "student";
+  if (userRole !== "student") {
+    redirect("/dashboard");
+  }
+
   // Skip if already completed
   const { data: profile } = await supabase
     .from("profiles")
