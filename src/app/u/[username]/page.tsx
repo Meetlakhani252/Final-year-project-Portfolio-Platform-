@@ -18,7 +18,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BackButton } from "@/components/portfolio/back-button";
 import { ProfileSidebar } from "@/components/portfolio/profile-sidebar";
 import { CommentSection } from "@/components/portfolio/comment-section";
-import { MessageSquare } from "lucide-react";
+import { SendMessageButton } from "@/components/recruiter/send-message-button";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -208,17 +208,11 @@ export default async function PublicPortfolioPage({
               </p>
             )}
 
-            {/* Send Message button — shown to logged-in users viewing someone else's portfolio */}
             {currentUser && currentUser.id !== profile.id && (
-              <div>
-                <Link
-                  href={`/messages?with=${profile.id}`}
-                  className="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
-                >
-                  <MessageSquare className="size-3.5" />
-                  Send Message
-                </Link>
-              </div>
+              <SendMessageButton
+                recipientId={profile.id}
+                className="w-auto"
+              />
             )}
           </CardContent>
         </Card>
