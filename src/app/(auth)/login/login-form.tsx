@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { GraduationCap, Briefcase } from "lucide-react";
 import { signIn, signInWithGoogle } from "@/actions/auth";
 import { signInSchema, type SignInInput } from "@/validations/auth";
 import { Button } from "@/components/ui/button";
@@ -18,13 +19,36 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { PLATFORM_NAME } from "@/lib/constants";
 
+type LoginMode = "student" | "recruiter";
+
+const MODE_CONFIG = {
+  student: {
+    title: "Student Sign In",
+    description: "Sign in to your student account",
+    signupLabel: "Don't have an account?",
+    signupLinkLabel: "Sign up",
+    signupHref: "/signup",
+  },
+  recruiter: {
+    title: "Recruiter Sign In",
+    description: "Sign in to your recruiter account",
+    signupLabel: "No recruiter account?",
+    signupLinkLabel: "Register here",
+    signupHref: "/signup/recruiter",
+  },
+};
+
 export function LoginForm() {
+  const [mode, setMode] = useState<LoginMode>("student");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const callbackError = searchParams.get("error");
+
+  const config = MODE_CONFIG[mode];
 
   const {
     register,
@@ -56,10 +80,42 @@ export function LoginForm() {
 
   return (
     <Card>
-      <CardHeader className="text-center">
+      <CardHeader className="text-center pb-2">
         <CardTitle className="text-2xl">{PLATFORM_NAME}</CardTitle>
-        <CardDescription>Sign in to your account</CardDescription>
+
+        {/* Student / Recruiter toggle */}
+        <div className="mt-4 flex rounded-lg border bg-muted/50 p-1">
+          <button
+            type="button"
+            onClick={() => { setMode("student"); setError(null); }}
+            className={cn(
+              "flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-all",
+              mode === "student"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <GraduationCap className="size-4" />
+            Student
+          </button>
+          <button
+            type="button"
+            onClick={() => { setMode("recruiter"); setError(null); }}
+            className={cn(
+              "flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-all",
+              mode === "recruiter"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <Briefcase className="size-4" />
+            Recruiter
+          </button>
+        </div>
+
+        <CardDescription className="mt-2">{config.description}</CardDescription>
       </CardHeader>
+
       <CardContent className="space-y-4">
         {(error || callbackError) && (
           <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
@@ -103,7 +159,7 @@ export function LoginForm() {
           </div>
 
           <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? "Signing in..." : "Sign in"}
+            {isPending ? "Signing in..." : config.title}
           </Button>
         </form>
 
@@ -145,10 +201,11 @@ export function LoginForm() {
           Google
         </Button>
       </CardContent>
+
       <CardFooter className="justify-center gap-1 text-sm text-muted-foreground">
-        <span>Don&apos;t have an account?</span>
-        <Link href="/signup" className="text-primary hover:underline">
-          Sign up
+        <span>{config.signupLabel}</span>
+        <Link href={config.signupHref} className="text-primary hover:underline">
+          {config.signupLinkLabel}
         </Link>
       </CardFooter>
     </Card>

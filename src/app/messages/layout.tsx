@@ -1,6 +1,7 @@
 import { getUser } from "@/lib/get-user";
 import { STUDENT_NAV, RECRUITER_NAV } from "@/lib/nav-config";
 import { TopNavbar } from "@/components/shared/top-navbar";
+import { DesktopSidebar } from "@/components/shared/desktop-sidebar";
 
 export const metadata = {
   title: "Messages — StudentPortfolio",
@@ -25,7 +26,10 @@ export default async function MessagesLayout({
           username: user.username,
         }}
       />
-      <div className="flex flex-1 overflow-hidden">{children}</div>
+      <div className="flex flex-1 overflow-hidden">
+        <DesktopSidebar items={nav} />
+        {children}
+      </div>
     </div>
   );
 }
