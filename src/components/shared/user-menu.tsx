@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 import { signOut } from "@/actions/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -32,9 +33,11 @@ function getInitials(name: string): string {
 
 export function UserMenu({ fullName, email, avatarUrl, username }: UserMenuProps) {
   const [isPending, startTransition] = useTransition();
+  const queryClient = useQueryClient();
 
   function handleSignOut() {
     startTransition(async () => {
+      queryClient.clear();
       await signOut();
     });
   }

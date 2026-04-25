@@ -163,11 +163,11 @@ export async function signOut(): Promise<void> {
   redirect("/login");
 }
 
-export async function signInWithGoogle(): Promise<AuthResult> {
+export async function signInWithGithub(): Promise<AuthResult> {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
+    provider: "github",
     options: {
       redirectTo: `${APP_URL}/api/auth/callback`,
     },
@@ -181,5 +181,59 @@ export async function signInWithGoogle(): Promise<AuthResult> {
     redirect(data.url);
   }
 
-  return { error: "Failed to initiate Google sign in" };
+  return { error: "Failed to initiate GitHub sign in" };
+}
+
+export async function requestEmailOtp(email: string): Promise<AuthResult> {
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { error: "Please enter a valid email address" };
+  }
+
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: true },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return {};
+}
+
+export async function verifyEmailOtp(
+  email: string,
+  token: string
+): Promise<AuthResult> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "email",
+  });
+
+  if (error) {
+    return { error: "Invalid or expired code. Please try again." };
+  }
+
+  const user = data.user;
+  if (user) {
+    const userRole = (user.user_metadata?.role as string) ?? "student";
+    if (userRole === "student") {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("id", user.id)
+        .single();
+
+      if (profile && !profile.onboarding_completed) {
+        redirect("/onboarding");
+      }
+    }
+  }
+
+  redirect("/dashboard");
 }

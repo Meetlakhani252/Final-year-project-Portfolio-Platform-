@@ -21,6 +21,7 @@ export const PROTECTED_ROUTES = [
   "/notifications",
   "/settings",
   "/jobs",
+  "/messages",
 ];
 
 // Role-specific routes
@@ -28,7 +29,6 @@ export const STUDENT_ROUTES = [
   "/portfolio/edit",
   "/resume",
   "/forums",
-  "/messages",
   "/teams",
 ];
 
