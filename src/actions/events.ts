@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/get-user";
 import { createEventSchema, type CreateEventInput } from "@/validations/events";
 import { revalidatePath } from "next/cache";
+import { createNotification } from "@/lib/create-notification";
 
 export type EventItem = {
   id: string;
@@ -78,6 +79,39 @@ export async function createEvent(
   }
 
   revalidatePath("/events");
+
+  // Notify students whose skills overlap with this event's required_skills
+  if (parsed.data.required_skills.length > 0) {
+    const { data: matchingStudents } = await supabase
+      .from("skills")
+      .select("profile_id")
+      .in("name", parsed.data.required_skills);
+
+    if (matchingStudents && matchingStudents.length > 0) {
+      const uniqueStudentIds = [
+        ...new Set(matchingStudents.map((s) => s.profile_id)),
+      ].filter((id) => id !== user.id);
+
+      const skillList = parsed.data.required_skills.slice(0, 3).join(", ");
+      const body =
+        parsed.data.required_skills.length > 3
+          ? `Matches your skills: ${skillList} and more`
+          : `Matches your skills: ${skillList}`;
+
+      await Promise.all(
+        uniqueStudentIds.map((studentId) =>
+          createNotification(
+            supabase,
+            studentId,
+            "event_new",
+            `New event: ${parsed.data.title}`,
+            body,
+            `/events/${event.id}`
+          )
+        )
+      );
+    }
+  }
 
   return { ok: true, id: event.id };
 }

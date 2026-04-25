@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/logo";
 import { UserMenu } from "@/components/shared/user-menu";
 import { MobileNav } from "@/components/shared/mobile-nav";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import type { NavItem } from "@/lib/nav-config";
 
 interface TopNavbarProps {
@@ -41,7 +42,7 @@ export function TopNavbar({
           <Button
             variant="ghost"
             size="icon"
-            className="relative min-h-[44px] min-w-[44px]"
+            className="relative min-h-11 min-w-11"
             render={<Link href="/messages" />}
           >
             <MessageSquare className="size-5" />
@@ -49,19 +50,7 @@ export function TopNavbar({
           </Button>
         )}
 
-        {showNotifications && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative min-h-[44px] min-w-[44px]"
-          >
-            <Bell className="size-5" />
-            <span className="sr-only">Notifications</span>
-            <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
-              0
-            </span>
-          </Button>
-        )}
+        {showNotifications && <NotificationBell />}
 
         <UserMenu
           fullName={user.fullName}

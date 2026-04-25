@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { messageSchema } from "@/validations/message";
+import { createNotification } from "@/lib/create-notification";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -132,10 +133,10 @@ export async function sendMessage(
     return { ok: false, error: parsed.error.issues[0].message };
   }
 
-  // Verify user is a participant in this conversation
+  // Verify user is a participant and get the other participant's id
   const { data: conv } = await supabase
     .from("conversations")
-    .select("id")
+    .select("id, participant_one, participant_two")
     .eq("id", conversationId)
     .or(`participant_one.eq.${user.id},participant_two.eq.${user.id}`)
     .single();
@@ -159,6 +160,20 @@ export async function sendMessage(
     .select("id, full_name, username, avatar_url")
     .eq("id", user.id)
     .single();
+
+  // Notify the recipient
+  const recipientId =
+    conv.participant_one === user.id ? conv.participant_two : conv.participant_one;
+
+  const senderName = senderProfile?.full_name ?? "Someone";
+  await createNotification(
+    supabase,
+    recipientId,
+    "dm",
+    `New message from ${senderName}`,
+    parsed.data.content.slice(0, 120),
+    `/messages`
+  );
 
   return { ok: true, data: { ...message, sender: senderProfile ?? null } };
 }

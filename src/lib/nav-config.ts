@@ -8,7 +8,8 @@ export type NavIconName =
   | "discover"
   | "bookmarks"
   | "messages"
-  | "create-event";
+  | "create-event"
+  | "jobs";
 
 export interface NavItem {
   label: string;
@@ -23,14 +24,15 @@ export const STUDENT_NAV: NavItem[] = [
   { label: "Forums", href: "/forums", icon: "forums" },
   { label: "Events", href: "/events", icon: "events" },
   { label: "Teams", href: "/teams", icon: "teams" },
+  { label: "Jobs", href: "/jobs", icon: "jobs" },
   { label: "Messages", href: "/messages", icon: "messages" },
-
 ];
 
 export const RECRUITER_NAV: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: "dashboard" },
   { label: "Discover", href: "/discover", icon: "discover" },
   { label: "Bookmarks", href: "/bookmarks", icon: "bookmarks" },
+  { label: "Job Postings", href: "/jobs", icon: "jobs" },
   { label: "Messages", href: "/messages", icon: "messages" },
 ];
 

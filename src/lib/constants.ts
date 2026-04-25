@@ -1,5 +1,5 @@
 export const PLATFORM_NAME =
-  process.env.NEXT_PUBLIC_PLATFORM_NAME || "StudentPortfolio";
+  process.env.NEXT_PUBLIC_PLATFORM_NAME || "Profolio";
 
 export const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -20,6 +20,7 @@ export const PROTECTED_ROUTES = [
   "/onboarding",
   "/notifications",
   "/settings",
+  "/jobs",
 ];
 
 // Role-specific routes

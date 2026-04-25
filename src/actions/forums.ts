@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/get-user";
 import { forumPostSchema } from "@/validations/forum";
 import type { JSONContent } from "novel";
+import { createNotification } from "@/lib/create-notification";
 
 type AuthorProfile = {
   id: string;
@@ -379,11 +380,41 @@ export async function replyToPost(
 
   if (error) throw new Error(error.message);
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("id, full_name, username, avatar_url")
-    .eq("id", user.id)
-    .single();
+  const [{ data: profile }, { data: post }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("id, full_name, username, avatar_url")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("forum_posts")
+      .select("profile_id, title, category_id")
+      .eq("id", postId)
+      .single(),
+  ]);
+
+  // Notify the thread author (skip if they replied to their own post)
+  if (post && post.profile_id !== user.id) {
+    const { data: category } = await supabase
+      .from("forum_categories")
+      .select("slug")
+      .eq("id", post.category_id)
+      .single();
+
+    const link = category
+      ? `/forums/${category.slug}/${postId}`
+      : `/forums`;
+
+    const replierName = profile?.full_name ?? "Someone";
+    await createNotification(
+      supabase,
+      post.profile_id,
+      "forum_reply",
+      `${replierName} replied to your post`,
+      post.title,
+      link
+    );
+  }
 
   return {
     id: reply.id,

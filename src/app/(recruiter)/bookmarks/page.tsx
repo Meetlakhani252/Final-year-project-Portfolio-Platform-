@@ -2,7 +2,7 @@ import { Bookmark } from "lucide-react";
 import { getBookmarks } from "@/actions/recruiter";
 import { BookmarksGrid } from "@/components/recruiter/bookmarks-grid";
 
-export const metadata = { title: "Bookmarks — StudentPortfolio" };
+export const metadata = { title: "Bookmarks — Profolio" };
 
 export default async function BookmarksPage() {
   const bookmarks = await getBookmarks();

@@ -8,7 +8,7 @@ import { EventsFilter } from "@/components/events/events-filter";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "Events — StudentPortfolio",
+  title: "Events — Profolio",
 };
 
 export default async function EventsPage({

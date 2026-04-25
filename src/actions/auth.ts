@@ -11,6 +11,7 @@ import {
   type RecruiterSignUpInput,
 } from "@/validations/auth";
 import { APP_URL } from "@/lib/constants";
+import { sendWelcomeEmail } from "@/lib/resend";
 
 export type AuthResult = {
   error?: string;
@@ -45,6 +46,13 @@ export async function signUp(data: SignUpInput): Promise<AuthResult> {
     }
     return { error: error.message };
   }
+
+  // Send welcome email (fire and forget — don't block redirect on email failure)
+  sendWelcomeEmail(parsed.data.email, {
+    fullName: parsed.data.full_name,
+    role: "student",
+    dashboardUrl: `${APP_URL}/dashboard`,
+  }).catch(() => {});
 
   // If email confirmation is required, session is null — tell the user to check email
   if (!signUpData.session) {
@@ -85,6 +93,13 @@ export async function recruiterSignUp(
     }
     return { error: error.message };
   }
+
+  // Send welcome email (fire and forget)
+  sendWelcomeEmail(parsed.data.email, {
+    fullName: parsed.data.full_name,
+    role: parsed.data.role as "recruiter" | "organizer",
+    dashboardUrl: `${APP_URL}/dashboard`,
+  }).catch(() => {});
 
   if (!signUpData.session) {
     return { error: "CHECK_EMAIL" };

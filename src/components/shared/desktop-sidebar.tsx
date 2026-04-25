@@ -23,7 +23,7 @@ export function DesktopSidebar({ items }: { items: NavItem[] }) {
           variant="ghost"
           size="icon"
           onClick={toggle}
-          className="min-h-[44px] min-w-[44px]"
+          className="min-h-11 min-w-11"
         >
           {open ? (
             <PanelLeftClose className="size-5" />

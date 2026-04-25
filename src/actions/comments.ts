@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { commentSchema } from "@/validations/comment";
+import { createNotification } from "@/lib/create-notification";
 
 export type CommentWithProfile = {
   id: string;
@@ -84,6 +85,37 @@ export async function addComment(
   }
 
   await revalidatePortfolioPath(supabase, targetType, targetId);
+
+  // Notify the portfolio owner (skip if the owner is the commenter)
+  const ownerTable = targetType === "project" ? "projects" : "blog_posts";
+  const { data: ownerRow } = await supabase
+    .from(ownerTable)
+    .select("profile_id, profiles(username)")
+    .eq("id", targetId)
+    .single();
+
+  const ownerId = ownerRow?.profile_id;
+  if (ownerId && ownerId !== user.id) {
+    const ownerUsername =
+      (ownerRow?.profiles as { username: string } | null)?.username ?? "";
+    const itemLabel = targetType === "project" ? "project" : "blog post";
+    const link =
+      targetType === "project"
+        ? `/u/${ownerUsername}`
+        : `/u/${ownerUsername}/blog`;
+
+    const commenterName =
+      (comment as CommentWithProfile).profiles?.full_name ?? "Someone";
+
+    await createNotification(
+      supabase,
+      ownerId,
+      "comment",
+      `${commenterName} commented on your ${itemLabel}`,
+      comment.content.slice(0, 120),
+      link
+    );
+  }
 
   return { ok: true, data: comment as CommentWithProfile };
 }

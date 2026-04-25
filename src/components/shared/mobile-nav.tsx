@@ -22,7 +22,7 @@ export function MobileNav({ items }: { items: NavItem[] }) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
         render={
-          <Button variant="ghost" size="icon" className="lg:hidden min-h-[44px] min-w-[44px]" />
+          <Button variant="ghost" size="icon" className="lg:hidden min-h-11 min-w-11" />
         }
       >
         <Menu className="size-5" />

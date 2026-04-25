@@ -4,7 +4,7 @@ import { getUpcomingEventsForSelect } from "@/actions/teams";
 import { TeamPostForm } from "@/components/teams/team-post-form";
 
 export const metadata = {
-  title: "Post Team Listing — StudentPortfolio",
+  title: "Post Team Listing — Profolio",
 };
 
 export default async function CreateTeamPostPage() {

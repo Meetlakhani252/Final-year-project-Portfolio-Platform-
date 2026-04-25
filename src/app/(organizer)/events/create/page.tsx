@@ -3,7 +3,7 @@ import { getUser } from "@/lib/get-user";
 import { EventForm } from "@/components/events/event-form";
 
 export const metadata = {
-  title: "Create Event — StudentPortfolio",
+  title: "Create Event — Profolio",
 };
 
 export default async function CreateEventPage() {

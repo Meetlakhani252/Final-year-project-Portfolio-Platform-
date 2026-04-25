@@ -127,7 +127,7 @@ function SummarySection({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="A brief professional summary…"
-        className="min-h-[80px] resize-y"
+        className="min-h-20 resize-y"
       />
     </div>
   );
@@ -160,8 +160,8 @@ function EducationSection({
         <div key={i} className="rounded-lg border p-3 space-y-2">
           <div className="flex justify-between items-center">
             <p className="text-xs font-medium text-muted-foreground">Entry {i + 1}</p>
-            <Button variant="ghost" size="icon" className="size-6" onClick={() => remove(i)}>
-              <X className="size-3" />
+            <Button variant="ghost" size="icon" className="size-8" aria-label={`Remove education entry ${i + 1}`} onClick={() => remove(i)}>
+              <X className="size-3.5" />
             </Button>
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -215,7 +215,7 @@ function SkillsSection({
   return (
     <div className="space-y-3">
       <SectionHeading>Skills</SectionHeading>
-      <div className="flex flex-wrap gap-1.5 rounded-md border min-h-[40px] p-2">
+      <div className="flex flex-wrap gap-1.5 rounded-md border min-h-10 p-2">
         {value.map((s, i) => (
           <span
             key={i}
@@ -231,7 +231,7 @@ function SkillsSection({
           type="text"
           onKeyDown={handleKeyDown}
           placeholder={value.length === 0 ? "Type a skill and press Enter…" : "Add more…"}
-          className="flex-1 min-w-[120px] bg-transparent text-xs outline-none placeholder:text-muted-foreground"
+          className="flex-1 min-w-30 bg-transparent text-xs outline-none placeholder:text-muted-foreground"
         />
       </div>
       <p className="text-[10px] text-muted-foreground">Press Enter or comma to add a skill</p>
@@ -262,8 +262,8 @@ function ProjectsSection({
         <div key={i} className="rounded-lg border p-3 space-y-2">
           <div className="flex justify-between items-center">
             <p className="text-xs font-medium text-muted-foreground">Project {i + 1}</p>
-            <Button variant="ghost" size="icon" className="size-6" onClick={() => remove(i)}>
-              <X className="size-3" />
+            <Button variant="ghost" size="icon" className="size-8" aria-label={`Remove project ${i + 1}`} onClick={() => remove(i)}>
+              <X className="size-3.5" />
             </Button>
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -279,7 +279,7 @@ function ProjectsSection({
               value={p.description}
               onChange={(e) => update(i, "description", e.target.value)}
               placeholder="What does it do?"
-              className="min-h-[56px] resize-y"
+              className="min-h-14 resize-y"
             />
           </Field>
           <Field label="Tech stack (comma-separated)">
@@ -325,8 +325,8 @@ function CertificationsSection({
         <div key={i} className="rounded-lg border p-3 space-y-2">
           <div className="flex justify-between items-center">
             <p className="text-xs font-medium text-muted-foreground">Cert {i + 1}</p>
-            <Button variant="ghost" size="icon" className="size-6" onClick={() => remove(i)}>
-              <X className="size-3" />
+            <Button variant="ghost" size="icon" className="size-8" aria-label={`Remove certification ${i + 1}`} onClick={() => remove(i)}>
+              <X className="size-3.5" />
             </Button>
           </div>
           <div className="grid grid-cols-2 gap-2">

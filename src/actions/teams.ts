@@ -8,6 +8,7 @@ import {
   teamCommentSchema,
   type CreateTeamPostInput,
 } from "@/validations/teams";
+import { createNotification } from "@/lib/create-notification";
 
 export type TeamPost = {
   id: string;
@@ -231,6 +232,32 @@ export async function addTeamComment(
 
   if (error) {
     return { ok: false, error: "Failed to post comment. Please try again." };
+  }
+
+  // Notify the team post author (skip if they're commenting on their own post)
+  const [{ data: teamPost }, { data: commenterProfile }] = await Promise.all([
+    supabase
+      .from("team_posts")
+      .select("profile_id, title")
+      .eq("id", postId)
+      .single(),
+    supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .single(),
+  ]);
+
+  if (teamPost && teamPost.profile_id !== user.id) {
+    const commenterName = commenterProfile?.full_name ?? "Someone";
+    await createNotification(
+      supabase,
+      teamPost.profile_id,
+      "team_match",
+      `${commenterName} is interested in joining your team`,
+      teamPost.title,
+      `/teams/${postId}`
+    );
   }
 
   revalidatePath(`/teams/${postId}`);

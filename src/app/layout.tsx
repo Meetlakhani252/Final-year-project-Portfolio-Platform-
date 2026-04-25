@@ -11,9 +11,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "StudentPortfolio",
+  title: "Profolio",
   description:
-    "Build, maintain, and share your professional graduate student portfolio.",
+    "Build, maintain, and share your professional portfolio. Showcase your journey, shape your future.",
 };
 
 export default function RootLayout({

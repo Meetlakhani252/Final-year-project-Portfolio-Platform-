@@ -4,7 +4,7 @@ import { TopNavbar } from "@/components/shared/top-navbar";
 import { DesktopSidebar } from "@/components/shared/desktop-sidebar";
 
 export const metadata = {
-  title: "Forums — StudentPortfolio",
+  title: "Forums — Profolio",
 };
 
 export default async function ForumsLayout({

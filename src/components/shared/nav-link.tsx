@@ -13,6 +13,7 @@ import {
   Search,
   Bookmark,
   CalendarPlus,
+  Building2,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -29,6 +30,7 @@ const ICONS: Record<NavIconName, LucideIcon> = {
   bookmarks: Bookmark,
   messages: MessageSquare,
   "create-event": CalendarPlus,
+  jobs: Building2,
 };
 
 export function NavLink({
@@ -50,7 +52,7 @@ export function NavLink({
       href={item.href}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors min-h-[44px]",
+        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors min-h-11",
         isActive
           ? "bg-primary/10 text-primary"
           : "text-muted-foreground hover:bg-muted hover:text-foreground"

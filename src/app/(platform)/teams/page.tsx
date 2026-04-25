@@ -8,7 +8,7 @@ import { TeamsFilter } from "@/components/teams/teams-filter";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "Teams — StudentPortfolio",
+  title: "Teams — Profolio",
 };
 
 export default async function TeamsPage({

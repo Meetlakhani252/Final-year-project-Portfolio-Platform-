@@ -42,7 +42,7 @@ export function UserMenu({ fullName, email, avatarUrl, username }: UserMenuProps
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring min-h-[44px] min-w-[44px] justify-center"
+        className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring min-h-11 min-w-11 justify-center"
       >
         <Avatar>
           {avatarUrl && <AvatarImage src={avatarUrl} alt={fullName} />}

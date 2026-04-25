@@ -11,7 +11,7 @@ import { DiscoverFilter } from "@/components/recruiter/discover-filter";
 import { StudentCard } from "@/components/recruiter/student-card";
 import { Button } from "@/components/ui/button";
 
-export const metadata = { title: "Discover Students — StudentPortfolio" };
+export const metadata = { title: "Discover Students — Profolio" };
 
 function buildPageUrl(
   params: Record<string, string | string[] | undefined>,
