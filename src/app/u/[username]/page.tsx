@@ -202,7 +202,7 @@ export default async function PublicPortfolioPage({
                   <h1 className="font-mono text-4xl font-bold tracking-tighter text-foreground">
                     {profile.full_name}
                   </h1>
-                  {profile.gpa >= 3.5 && (
+                  {profile.gpa && profile.gpa >= 3.5 && (
                     <div className="badge-sage flex items-center gap-1 py-1">
                       <Sparkles className="size-3" />
                       Academic Excellence
