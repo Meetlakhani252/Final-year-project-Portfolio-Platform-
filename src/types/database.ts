@@ -1109,7 +1109,8 @@ export type Database = {
             | "dm"
             | "team_match"
             | "event_new"
-            | "forum_reply";
+            | "forum_reply"
+            | "application";
           title: string;
           body?: string | null;
           link?: string | null;
@@ -1125,7 +1126,8 @@ export type Database = {
             | "dm"
             | "team_match"
             | "event_new"
-            | "forum_reply";
+            | "forum_reply"
+            | "application";
           title?: string;
           body?: string | null;
           link?: string | null;
@@ -1176,6 +1178,42 @@ export type Database = {
             foreignKeyName: "github_connections_profile_id_fkey";
             columns: ["profile_id"];
             isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      connections: {
+        Row: {
+          id: string;
+          follower_id: string;
+          following_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          follower_id: string;
+          following_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          follower_id?: string;
+          following_id?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "connections_follower_id_fkey";
+            columns: ["follower_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "connections_following_id_fkey";
+            columns: ["following_id"];
+            isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },

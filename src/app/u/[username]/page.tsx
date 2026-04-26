@@ -47,6 +47,7 @@ const DEFAULT_SECTION_ORDER = [
   "blog",
   "photos",
   "social",
+  "comments",
 ];
 
 const SECTION_LABELS: Record<string, string> = {
@@ -58,6 +59,7 @@ const SECTION_LABELS: Record<string, string> = {
   blog: "Blog",
   photos: "Photos",
   social: "Connect",
+  comments: "Feedback",
 };
 
 function getInitials(name: string) {
@@ -603,6 +605,22 @@ export default async function PublicPortfolioPage({
         </section>
       );
     },
+    comments: () => (
+      <section id="comments" className="space-y-4">
+        <h2 className="font-mono text-xl font-bold tracking-tight text-primary">
+          &gt; Public Feedback
+        </h2>
+        <Card className="glass-card p-6">
+          <CommentSection
+            targetType="blog_post"
+            targetId={profile.id}
+            currentUserId={currentUser?.id ?? null}
+            currentUserRole={currentUserRole}
+            portfolioOwnerId={profile.id}
+          />
+        </Card>
+      </section>
+    ),
   };
 
   // Pre-compute which sections render (have content) for sidebar + dividers
