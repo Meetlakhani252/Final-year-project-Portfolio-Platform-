@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useState } from "react";
+import { useTransition, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -25,12 +25,28 @@ export default function SignUpPage() {
   const [checkEmail, setCheckEmail] = useState(false);
 
   const {
+    formState: { errors },
+    setValue,
+    watch,
     register,
     handleSubmit,
-    formState: { errors },
   } = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),
   });
+
+  const fullName = watch("full_name");
+  const [hasManuallyEditedUsername, setHasManuallyEditedUsername] = useState(false);
+
+  // Effect to update username when fullName changes, if not manually edited
+  useEffect(() => {
+    if (fullName && !hasManuallyEditedUsername) {
+      const firstName = fullName.split(" ")[0].toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (firstName) {
+        const randomNum = Math.floor(100 + Math.random() * 900);
+        setValue("username", `${firstName}${randomNum}`, { shouldValidate: true });
+      }
+    }
+  }, [fullName, hasManuallyEditedUsername, setValue]);
 
   function onSubmit(data: SignUpInput) {
     setError(null);
@@ -86,13 +102,13 @@ export default function SignUpPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
           <div className="space-y-2">
             <Label htmlFor="full_name">Full Name</Label>
             <Input
               id="full_name"
               placeholder="John Doe"
-              autoComplete="name"
+              autoComplete="off"
               {...register("full_name")}
               aria-invalid={!!errors.full_name}
             />
@@ -107,11 +123,16 @@ export default function SignUpPage() {
             <Label htmlFor="username">Username</Label>
             <Input
               id="username"
-              placeholder="johndoe"
-              autoComplete="username"
-              {...register("username")}
+              placeholder="johndoe123"
+              autoComplete="off"
+              {...register("username", {
+                onChange: () => setHasManuallyEditedUsername(true)
+              })}
               aria-invalid={!!errors.username}
             />
+            <p className="text-[10px] text-muted-foreground mt-1">
+              Suggested: First name + 3 numbers (e.g. {fullName?.split(" ")[0] || "John"}123)
+            </p>
             {errors.username && (
               <p className="text-xs text-destructive">
                 {errors.username.message}
@@ -125,7 +146,7 @@ export default function SignUpPage() {
               id="email"
               type="email"
               placeholder="you@example.com"
-              autoComplete="email"
+              autoComplete="off"
               {...register("email")}
               aria-invalid={!!errors.email}
             />

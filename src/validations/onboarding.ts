@@ -52,6 +52,7 @@ export const avatarFileSchema = z
 
 export const completeOnboardingSchema = z.object({
   full_name: z.string().min(2).max(100),
+  username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_-]+$/),
   bio: z.string().max(500),
   university: z.string().max(200),
   program: z.string().max(200),

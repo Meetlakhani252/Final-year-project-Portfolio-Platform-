@@ -67,7 +67,7 @@ export default function RecruiterSignUpPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
           <div className="space-y-2">
             <Label htmlFor="full_name">Full Name</Label>
             <Input

@@ -182,19 +182,20 @@ export function LoginForm() {
         )}
 
         {/* Email + password form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="identifier">Email or Username</Label>
             <Input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              autoComplete="email"
-              {...register("email")}
-              aria-invalid={!!errors.email}
+              id="identifier"
+              placeholder="you@example.com or john123"
+              autoComplete="off"
+              {...register("identifier")}
+              aria-invalid={!!errors.identifier}
             />
-            {errors.email && (
-              <p className="text-xs text-destructive">{errors.email.message}</p>
+            {errors.identifier && (
+              <p className="text-xs text-destructive">
+                {errors.identifier.message}
+              </p>
             )}
           </div>
 
@@ -204,7 +205,7 @@ export function LoginForm() {
               id="password"
               type="password"
               placeholder="Enter your password"
-              autoComplete="current-password"
+              autoComplete="off"
               {...register("password")}
               aria-invalid={!!errors.password}
             />
@@ -288,6 +289,7 @@ export function LoginForm() {
                   value={otpEmail}
                   onChange={(e) => setOtpEmail(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSendOtp()}
+                  autoComplete="off"
                   autoFocus
                 />
                 <Button

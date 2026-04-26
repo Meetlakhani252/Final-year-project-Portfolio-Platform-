@@ -34,6 +34,7 @@ export async function completeOnboarding(
   // Parse form fields
   const rawData: CompleteOnboardingInput = {
     full_name: formData.get("full_name") as string,
+    username: formData.get("username") as string,
     bio: (formData.get("bio") as string) || "",
     university: (formData.get("university") as string) || "",
     program: (formData.get("program") as string) || "",
@@ -90,6 +91,7 @@ export async function completeOnboarding(
     .from("profiles")
     .update({
       full_name: data.full_name,
+      username: data.username,
       bio: data.bio || null,
       university: data.university || null,
       program: data.program || null,
@@ -174,12 +176,14 @@ export async function completeOnboarding(
     console.error("Failed to create section order:", orderError);
   }
 
-  // Update auth user metadata with avatar
-  if (avatarUrl) {
-    await supabase.auth.updateUser({
-      data: { avatar_url: avatarUrl },
-    });
-  }
+  // Update auth user metadata
+  await supabase.auth.updateUser({
+    data: { 
+      full_name: data.full_name,
+      username: data.username,
+      ...(avatarUrl ? { avatar_url: avatarUrl } : {})
+    },
+  });
 
   revalidatePath("/dashboard");
   redirect("/dashboard");

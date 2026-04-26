@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 
 export interface AppUser {
   id: string;
@@ -10,7 +11,7 @@ export interface AppUser {
   role: "student" | "recruiter" | "organizer";
 }
 
-export async function getUser(): Promise<AppUser> {
+export const getUser = cache(async (): Promise<AppUser> => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -28,4 +29,4 @@ export async function getUser(): Promise<AppUser> {
     avatarUrl: (user.user_metadata?.avatar_url as string) ?? null,
     role: (user.user_metadata?.role as AppUser["role"]) ?? "student",
   };
-}
+});

@@ -90,12 +90,23 @@ export default async function DiscoverPage({
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       {/* Header */}
-      <div className="rounded-2xl bg-linear-to-r from-violet-600 to-indigo-600 p-8 text-white">
-        <h1 className="text-2xl font-bold">Discover Talent</h1>
-        <p className="mt-1 text-sm text-white/80 font-sans font-normal">
-          Find graduate students matching your hiring criteria using the filters
-          below.
-        </p>
+      <div className="glass-card p-8 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-8 opacity-10 transition-transform group-hover:scale-110">
+          <Search className="size-24 text-primary" />
+        </div>
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
+            <Search className="size-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="font-mono text-3xl font-bold tracking-tight text-white">
+              <span className="text-primary">Scanner:</span> Discover Talent
+            </h1>
+            <p className="mt-1 text-muted-foreground font-sans font-normal">
+              Find graduate students matching your hiring criteria using advanced search protocols.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Filter panel — client component needs Suspense for useSearchParams */}

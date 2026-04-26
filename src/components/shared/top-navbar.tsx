@@ -7,6 +7,7 @@ import { Logo } from "@/components/shared/logo";
 import { UserMenu } from "@/components/shared/user-menu";
 import { MobileNav } from "@/components/shared/mobile-nav";
 import { NotificationBell } from "@/components/notifications/notification-bell";
+import { GlobalSearch } from "@/components/shared/global-search";
 import type { NavItem } from "@/lib/nav-config";
 
 interface TopNavbarProps {
@@ -37,7 +38,11 @@ export function TopNavbar({
 
       <div className="flex-1" />
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
+        <div className="hidden sm:block mr-2">
+          <GlobalSearch />
+        </div>
+
         {showMessages && (
           <Button
             variant="ghost"

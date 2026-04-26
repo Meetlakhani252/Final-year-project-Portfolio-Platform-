@@ -112,7 +112,7 @@ export function AboutForm({ profile }: { profile: Profile }) {
           Basic information shown at the top of your public portfolio.
         </CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <CardContent className="space-y-6">
           {/* Avatar */}
           <div className="flex items-center gap-4">

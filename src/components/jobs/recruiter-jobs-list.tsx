@@ -135,11 +135,12 @@ export function RecruiterJobsList({ initialJobs }: { initialJobs: JobPosting[] }
                 <span className="sr-only">Actions</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href={`/jobs/${job.id}/edit`} className="flex items-center gap-2">
-                    <Pencil className="size-4" />
-                    Edit
-                  </Link>
+                <DropdownMenuItem
+                  render={<Link href={`/jobs/${job.id}/edit`} />}
+                  className="gap-2"
+                >
+                  <Pencil className="size-4" />
+                  Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleToggle(job.id)}

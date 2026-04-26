@@ -19,6 +19,21 @@ import { BackButton } from "@/components/portfolio/back-button";
 import { ProfileSidebar } from "@/components/portfolio/profile-sidebar";
 import { CommentSection } from "@/components/portfolio/comment-section";
 import { SendMessageButton } from "@/components/recruiter/send-message-button";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import {
+  Zap,
+  Code2,
+  Cpu,
+  Terminal,
+  Layers,
+  Sparkles
+} from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { ConnectButton } from "@/components/shared/connect-button";
+import { checkConnection } from "@/actions/connections";
+import { getUser } from "@/lib/get-user";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -94,19 +109,13 @@ export default async function PublicPortfolioPage({
     notFound();
   }
 
-  // Fetch current viewer (needed for comment permissions)
-  const {
-    data: { user: currentUser },
-  } = await supabase.auth.getUser();
+  // Fetch current viewer
+  const currentUser = await getUser().catch(() => null);
+  const isConnected = profile ? await checkConnection(profile.id) : false;
 
   let currentUserRole: string | null = null;
   if (currentUser) {
-    const { data: currentProfile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", currentUser.id)
-      .single();
-    currentUserRole = currentProfile?.role ?? null;
+    currentUserRole = currentUser.role;
   }
 
   const [
@@ -169,51 +178,77 @@ export default async function PublicPortfolioPage({
   const sectionRenderers: Record<string, () => React.ReactNode> = {
     about: () => (
       <div id="about">
-        <Card>
-          <CardContent className="space-y-6 p-6 sm:p-8">
-            <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
-              <Avatar className="size-24">
-                {profile.avatar_url && (
-                  <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
-                )}
-                <AvatarFallback className="text-xl">
-                  {getInitials(profile.full_name)}
-                </AvatarFallback>
-              </Avatar>
+        <Card className="glass-card overflow-hidden border-primary/20 relative">
+          <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-primary/50 via-primary to-primary/50" />
+          <div className="absolute -top-24 -right-24 size-64 bg-primary/5 rounded-full blur-3xl" />
+          <CardContent className="space-y-6 p-8 relative">
+            <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:text-left">
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-linear-to-r from-primary to-cyan-500 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                <Avatar className="size-32 border-2 border-background relative">
+                  {profile.avatar_url && (
+                    <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
+                  )}
+                  <AvatarFallback className="text-3xl font-mono bg-slate-900 text-primary">
+                    {getInitials(profile.full_name)}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
 
-              <div className="flex-1 space-y-1">
-                <h1 className="text-2xl font-semibold tracking-tight">
-                  {profile.full_name}
-                </h1>
-                <p className="text-sm text-muted-foreground">@{profile.username}</p>
-                {(profile.program || profile.university) && (
-                  <p className="text-sm">
-                    {[profile.program, profile.university]
-                      .filter(Boolean)
-                      .join(" · ")}
-                    {profile.graduation_year ? ` · ${profile.graduation_year}` : ""}
-                  </p>
-                )}
-                {profile.gpa_public && profile.gpa != null && (
-                  <p className="text-sm text-muted-foreground">
-                    GPA: {profile.gpa.toFixed(2)}
-                  </p>
-                )}
+              <div className="flex-1 space-y-2">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="font-mono text-4xl font-bold tracking-tighter text-foreground">
+                    {profile.full_name}
+                  </h1>
+                  {profile.gpa >= 3.5 && (
+                    <div className="badge-sage flex items-center gap-1 py-1">
+                      <Sparkles className="size-3" />
+                      Academic Excellence
+                    </div>
+                  )}
+                </div>
+                <p className="text-lg text-primary font-mono opacity-80">@{profile.username}</p>
+                <div className="flex flex-wrap gap-x-4 gap-y-2 pt-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <GraduationCap className="size-4 text-primary" />
+                    {profile.program}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Globe className="size-4 text-primary" />
+                    {profile.university}
+                  </div>
+                </div>
               </div>
             </div>
 
             {profile.bio && (
-              <p className="text-sm leading-relaxed text-foreground/90">
-                {profile.bio}
-              </p>
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 relative overflow-hidden">
+                <Terminal className="absolute top-2 right-2 size-4 text-primary/20" />
+                <p className="text-sm leading-relaxed text-foreground/90 font-sans italic">
+                  &quot;{profile.bio}&quot;
+                </p>
+              </div>
             )}
 
-            {currentUser && currentUser.id !== profile.id && (
-              <SendMessageButton
-                recipientId={profile.id}
-                className="w-auto"
-              />
-            )}
+            <div className="flex flex-wrap gap-4 pt-2">
+              {currentUser && currentUser.id !== profile.id && (
+                <>
+                  <ConnectButton
+                    targetId={profile.id}
+                    initialIsConnected={isConnected}
+                    className="w-full sm:w-auto"
+                  />
+                  <SendMessageButton
+                    recipientId={profile.id}
+                    className="w-full sm:w-auto shadow-[0_0_20px_rgba(34,211,238,0.2)]"
+                  />
+                </>
+              )}
+              <Button variant="outline" className="w-full sm:w-auto border-primary/20 hover:bg-primary/10">
+                <FileText className="size-4 mr-2 text-primary" />
+                Download Protocol (Resume)
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -223,8 +258,8 @@ export default async function PublicPortfolioPage({
       if (!socialLinks || socialLinks.length === 0) return null;
       return (
         <section id="social" className="space-y-4">
-          <h2 className="heading-serif text-xl font-semibold tracking-tight">
-            Connect
+          <h2 className="font-mono text-xl font-bold tracking-tight text-primary">
+            &gt; Connect
           </h2>
           <div className="flex flex-wrap gap-3">
             {socialLinks.map((link) => {
@@ -253,16 +288,32 @@ export default async function PublicPortfolioPage({
       if (!skills || skills.length === 0) return null;
       return (
         <section id="skills" className="space-y-4">
-          <h2 className="heading-serif text-xl font-semibold tracking-tight">
-            Skills
+          <h2 className="font-mono text-xl font-bold tracking-tight text-primary flex items-center gap-2">
+            <Cpu className="size-5" /> &gt; Core Architecture
           </h2>
-          <div className="flex flex-wrap gap-1.5">
-            {skills.map((skill) => (
-              <span key={skill.id} className="badge-sage">
-                {skill.name}
-              </span>
-            ))}
-          </div>
+          <Card className="glass-card p-6">
+            <div className="space-y-6">
+              {/* Visual Proficiency bars for top 3 skills, then badges */}
+              <div className="grid gap-4">
+                {skills.slice(0, 3).map((skill, i) => (
+                  <div key={skill.id} className="space-y-2">
+                    <div className="flex justify-between text-xs font-mono">
+                      <span className="text-foreground">{skill.name}</span>
+                      <span className="text-primary">{85 - i * 5}%</span>
+                    </div>
+                    <Progress value={85 - i * 5} className="h-1.5 bg-primary/10" />
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-2 pt-2">
+                {skills.slice(3).map((skill) => (
+                  <span key={skill.id} className="badge-sage">
+                    {skill.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </Card>
         </section>
       );
     },
@@ -271,12 +322,12 @@ export default async function PublicPortfolioPage({
       if (!certifications || certifications.length === 0) return null;
       return (
         <section id="certifications" className="space-y-4">
-          <h2 className="heading-serif text-xl font-semibold tracking-tight">
-            Certifications
+          <h2 className="font-mono text-xl font-bold tracking-tight text-primary">
+            &gt; Certifications
           </h2>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3">
             {certifications.map((cert) => (
-              <Card key={cert.id}>
+              <Card key={cert.id} className="glass-card border-primary/10 hover:border-primary/30">
                 <CardContent className="flex items-start gap-3 p-4">
                   <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                     <Award className="size-5 text-primary" />
@@ -320,12 +371,12 @@ export default async function PublicPortfolioPage({
       if (!education || education.length === 0) return null;
       return (
         <section id="education" className="space-y-4">
-          <h2 className="heading-serif text-xl font-semibold tracking-tight">
-            Education
+          <h2 className="font-mono text-xl font-bold tracking-tight text-primary">
+            &gt; Education
           </h2>
           <div className="space-y-3">
             {education.map((edu) => (
-              <Card key={edu.id}>
+              <Card key={edu.id} className="glass-card border-primary/10 hover:border-primary/30">
                 <CardContent className="flex items-start gap-3 p-4">
                   <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                     <GraduationCap className="size-5 text-primary" />
@@ -342,20 +393,20 @@ export default async function PublicPortfolioPage({
                       <p className="text-xs text-muted-foreground">
                         {edu.start_date
                           ? new Date(
-                              edu.start_date + "T00:00:00"
-                            ).toLocaleDateString("en-US", {
-                              month: "short",
-                              year: "numeric",
-                            })
+                            edu.start_date + "T00:00:00"
+                          ).toLocaleDateString("en-US", {
+                            month: "short",
+                            year: "numeric",
+                          })
                           : "?"}{" "}
                         –{" "}
                         {edu.end_date
                           ? new Date(
-                              edu.end_date + "T00:00:00"
-                            ).toLocaleDateString("en-US", {
-                              month: "short",
-                              year: "numeric",
-                            })
+                            edu.end_date + "T00:00:00"
+                          ).toLocaleDateString("en-US", {
+                            month: "short",
+                            year: "numeric",
+                          })
                           : "Present"}
                       </p>
                     )}
@@ -386,12 +437,12 @@ export default async function PublicPortfolioPage({
       if (!projects || projects.length === 0) return null;
       return (
         <section id="projects" className="space-y-4">
-          <h2 className="heading-serif text-xl font-semibold tracking-tight">
-            Projects
+          <h2 className="font-mono text-xl font-bold tracking-tight text-primary">
+            &gt; Projects
           </h2>
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-6">
             {projects.map((project) => (
-              <Card key={project.id}>
+              <Card key={project.id} className="glass-card border-primary/20 hover:border-primary/40 overflow-hidden">
                 <CardContent className="space-y-4 p-6">
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                     <h3 className="text-lg font-semibold">{project.title}</h3>
@@ -541,7 +592,7 @@ export default async function PublicPortfolioPage({
                 />
                 {photo.caption && (
                   <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent p-2">
-                    <p className="truncate text-xs text-white">
+                    <p className="truncate text-xs text-foreground">
                       {photo.caption}
                     </p>
                   </div>
@@ -569,35 +620,69 @@ export default async function PublicPortfolioPage({
   }));
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:py-12">
-      {/* Back button */}
-      <div className="mb-6">
+    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:py-12 space-y-10">
+      <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
         <BackButton />
+        <div className="flex items-center gap-4">
+          {/* Quick Stats Bar */}
+          <div className="hidden md:flex gap-6 px-6 py-3 glass-card rounded-full border-primary/10">
+            <div className="text-center">
+              <p className="text-[10px] uppercase font-mono text-muted-foreground">Sequences</p>
+              <p className="text-sm font-mono font-bold text-primary">{projects?.length || 0}</p>
+            </div>
+            <Separator orientation="vertical" className="h-8 bg-primary/20" />
+            <div className="text-center">
+              <p className="text-[10px] uppercase font-mono text-muted-foreground">Skills</p>
+              <p className="text-sm font-mono font-bold text-primary">{skills?.length || 0}</p>
+            </div>
+            <Separator orientation="vertical" className="h-8 bg-primary/20" />
+            <div className="text-center">
+              <p className="text-[10px] uppercase font-mono text-muted-foreground">GPA</p>
+              <p className="text-sm font-mono font-bold text-primary">{profile.gpa?.toFixed(2) || "N/A"}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="flex gap-10">
-        {/* Sticky sidebar nav */}
-        <ProfileSidebar sections={activeSections} />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left Column - Navigation */}
+        <aside className="lg:col-span-3 space-y-6">
+          <div className="sticky top-24">
+            <ProfileSidebar sections={activeSections} />
+            <Card className="glass-card mt-6 p-4 border-dashed border-primary/30">
+              <p className="text-xs font-mono text-muted-foreground text-center">
+                Profile Status: <span className="text-primary font-bold">Optimized</span>
+              </p>
+            </Card>
+          </div>
+        </aside>
 
-        {/* Main content with dividers between sections */}
-        <div className="min-w-0 flex-1">
-          {renderedSections.map(({ id, element }, i) => (
+        {/* Right Column - Master Bento Grid */}
+        <div className="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-auto">
+          {renderedSections.map(({ id, element }) => (
             <div
               key={id}
-              className={i > 0 ? "mt-8 border-t pt-8" : ""}
+              className={cn(
+                id === "about" ? "md:col-span-12 lg:col-span-8" :
+                  id === "social" ? "md:col-span-6 lg:col-span-4" :
+                    id === "skills" ? "md:col-span-6 lg:col-span-5" :
+                      id === "education" ? "md:col-span-6 lg:col-span-7" :
+                        id === "projects" || id === "comments" ? "md:col-span-12" :
+                          "md:col-span-6"
+              )}
             >
               {element}
             </div>
           ))}
 
           {/* Journey link */}
-          <div className="mt-8 border-t pt-6 text-center">
+          <div className="md:col-span-12 py-12 text-center border-t border-primary/10 mt-10">
             <Link
               href={`/u/${username}/journey`}
-              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-full glass-card text-sm font-mono text-primary transition-all hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:border-primary/50 group"
             >
-              <History className="size-3.5" />
-              View portfolio journey
+              <History className="size-5 transition-transform group-hover:rotate-180 duration-500" />
+              Access Historical Journey Log
             </Link>
           </div>
         </div>

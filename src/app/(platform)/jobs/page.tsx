@@ -21,25 +21,29 @@ async function RecruiterView() {
   const jobs = await getMyJobPostings();
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <div className="rounded-2xl bg-linear-to-r from-teal-600 to-emerald-600 p-8 text-white">
-        <div className="flex items-start justify-between gap-4">
+      <div className="glass-card p-8 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-8 opacity-10 transition-transform group-hover:scale-110">
+          <Building2 className="size-24 text-primary" />
+        </div>
+        <div className="flex items-start justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-3">
-              <Building2 className="size-6" />
-              <h1 className="text-2xl font-bold">Job Postings</h1>
+              <h1 className="font-mono text-3xl font-bold tracking-tight text-white">
+                <span className="text-primary">Pipeline:</span> Job Postings
+              </h1>
             </div>
-            <p className="mt-1 text-sm text-white/80 font-sans font-normal">
+            <p className="mt-2 text-muted-foreground font-sans font-normal max-w-lg">
               {jobs.length === 0
-                ? "Post jobs and internships to attract top student talent."
-                : `${jobs.length} posting${jobs.length !== 1 ? "s" : ""} — manage them below.`}
+                ? "Post available positions to attract top-tier student talent to your organization."
+                : `${jobs.length} active posting${jobs.length !== 1 ? "s" : ""} — manage recruitment below.`}
             </p>
           </div>
           <Link
             href="/jobs/new"
-            className="shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-white text-teal-700 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors"
+            className="shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-mono font-bold text-sm hover:opacity-90 transition-all shadow-[0_0_15px_rgba(34,211,238,0.3)]"
           >
             <PlusCircle className="size-4" />
-            New posting
+            New Deployment
           </Link>
         </div>
       </div>
@@ -64,23 +68,27 @@ async function StudentView({
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
-      <div className="rounded-2xl bg-linear-to-r from-teal-600 to-emerald-600 p-8 text-white">
-        <div className="flex items-start justify-between gap-4">
+      <div className="glass-card p-8 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-8 opacity-10 transition-transform group-hover:scale-110">
+          <Building2 className="size-24 text-primary" />
+        </div>
+        <div className="flex items-start justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-3">
-              <Building2 className="size-6" />
-              <h1 className="text-2xl font-bold">Job Board</h1>
+              <h1 className="font-mono text-3xl font-bold tracking-tight text-white">
+                <span className="text-primary">Market:</span> Job Board
+              </h1>
             </div>
-            <p className="mt-1 text-sm text-white/80 font-sans font-normal">
-              Browse open jobs and internships posted by recruiters.
+            <p className="mt-2 text-muted-foreground font-sans font-normal max-w-lg">
+              Explore open career opportunities and internships from top-tier organizations.
             </p>
           </div>
           <Button
             render={<Link href="/jobs/applications" />}
             variant="outline"
-            className="shrink-0 border-white/40 text-white bg-white/10 hover:bg-white/20 hover:text-white"
+            className="shrink-0 border-primary/30 text-primary hover:bg-primary/10"
           >
-            My applications
+            Track Applications
           </Button>
         </div>
       </div>
@@ -90,11 +98,15 @@ async function StudentView({
       </Suspense>
 
       {jobs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-card py-20 text-center">
-          <Building2 className="size-10 text-muted-foreground/30 mb-4" />
-          <p className="font-medium text-foreground">No open positions found</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Check back later or try different filters.
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-primary/20 bg-primary/5 py-16 text-center">
+          <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+            <Building2 className="size-6 text-primary/40" />
+          </div>
+          <p className="text-muted-foreground font-mono text-sm uppercase tracking-wider">
+            Zero active job sequences found
+          </p>
+          <p className="text-xs text-muted-foreground mt-2">
+            Protocol: Check back later or adjust filters.
           </p>
         </div>
       ) : (

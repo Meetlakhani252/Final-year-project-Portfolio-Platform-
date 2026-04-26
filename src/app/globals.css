@@ -8,9 +8,9 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --font-serif: var(--font-sans);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-heading: var(--font-heading);
+  --font-serif: var(--font-playfair);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -65,137 +65,149 @@
    LIGHT MODE
    ============================================================ */
 :root {
-  /* Base */
-  --background: #ECEEF0;
-  --foreground: #08112F;
+  /* Warm Earth Theme - Light Mode */
+  --background: #F5F1EA; /* Linen */
+  --foreground: #4A342A; /* Espresso */
 
-  /* Card */
-  --card: #FFFFFF;
-  --card-foreground: #08112F;
+  /* Card - Warm Glassmorphism */
+  --card: rgba(215, 201, 184, 0.3); /* Translucent Khaki */
+  --card-foreground: #4A342A;
 
   /* Popover */
-  --popover: #FFFFFF;
-  --popover-foreground: #08112F;
+  --popover: #F5F1EA;
+  --popover-foreground: #4A342A;
 
-  /* Primary — #5A77DF */
-  --primary: #5A77DF;
-  --primary-foreground: #FFFFFF;
+  /* Primary — Cocoa */
+  --primary: #7D5A44;
+  --primary-foreground: #F5F1EA;
 
-  /* Secondary */
-  --secondary: #CCD4DE;
-  --secondary-foreground: #323954;
+  /* Secondary - Khaki */
+  --secondary: #D7C9B8;
+  --secondary-foreground: #4A342A;
 
   /* Muted */
-  --muted: #ECEEF0;
-  --muted-foreground: #323954;
+  --muted: rgba(178, 150, 125, 0.1); /* Translucent Camel */
+  --muted-foreground: #7D5A44;
 
-  /* Accent — #3E53A0 */
-  --accent: #3E53A0;
-  --accent-foreground: #FFFFFF;
+  /* Accent — Camel */
+  --accent: rgba(178, 150, 125, 0.2);
+  --accent-foreground: #7D5A44;
 
   /* Destructive */
-  --destructive: #DC2626;
+  --destructive: #991b1b;
+  --destructive-foreground: #F5F1EA;
 
   /* Border / Input / Ring */
-  --border: #CCD4DE;
-  --input: #CCD4DE;
-  --ring: #5A77DF;
+  --border: rgba(125, 90, 68, 0.2); /* Cocoa translucency */
+  --input: rgba(125, 90, 68, 0.1);
+  --ring: #7D5A44;
+
+  /* Radius - Softer rounded corners */
+  --radius: 1rem;
+
+  /* Charts - Warm tones */
+  --chart-1: #7D5A44;
+  --chart-2: #B2967D;
+  --chart-3: #D7C9B8;
+  --chart-4: #4A342A;
+  --chart-5: #63473B;
+
+  /* Sidebar */
+  --sidebar: #D7C9B8;
+  --sidebar-foreground: #4A342A;
+  --sidebar-primary: #7D5A44;
+  --sidebar-primary-foreground: #F5F1EA;
+  --sidebar-accent: rgba(178, 150, 125, 0.1);
+  --sidebar-accent-foreground: #7D5A44;
+  /* Sidebar ... */
+  --sidebar-ring: #7D5A44;
+
+  /* Font Assignment */
+  --font-heading: var(--font-playfair);
+}
+
+.dark {
+  /* The Innovator Theme - Obsidian & Cyan */
+  --background: #030712;
+  --foreground: #f8fafc;
+
+  /* Card - High Transparency Glassmorphism */
+  --card: rgba(15, 23, 42, 0.4);
+  --card-foreground: #f8fafc;
+
+  /* Popover */
+  --popover: rgba(3, 7, 18, 0.9);
+  --popover-foreground: #f8fafc;
+
+  /* Primary — Electric Cyan */
+  --primary: #22d3ee;
+  --primary-foreground: #030712;
+
+  /* Secondary - Deep Slate */
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
+
+  /* Muted */
+  --muted: rgba(30, 41, 59, 0.5);
+  --muted-foreground: #94a3b8;
+
+  /* Accent — Cyan/Teal */
+  --accent: rgba(34, 211, 238, 0.15);
+  --accent-foreground: #22d3ee;
+
+  /* Destructive */
+  --destructive: #ef4444;
+  --destructive-foreground: #f8fafc;
+
+  /* Border / Input / Ring */
+  --border: rgba(34, 211, 238, 0.2);
+  --input: rgba(34, 211, 238, 0.1);
+  --ring: #22d3ee;
 
   /* Radius */
   --radius: 0.75rem;
 
   /* Charts */
-  --chart-1: #5A77DF;
-  --chart-2: #3E53A0;
-  --chart-3: #9EB2D0;
-  --chart-4: #CCD4DE;
-  --chart-5: #323954;
+  --chart-1: #22d3ee;
+  --chart-2: #06b6d4;
+  --chart-3: #0891b2;
+  --chart-4: #0e7490;
+  --chart-5: #155e75;
 
   /* Sidebar */
-  --sidebar: #ECEEF0;
-  --sidebar-foreground: #08112F;
-  --sidebar-primary: #5A77DF;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #CCD4DE;
-  --sidebar-accent-foreground: #323954;
-  --sidebar-border: #CCD4DE;
-  --sidebar-ring: #5A77DF;
+  --sidebar: #020617;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #22d3ee;
+  --sidebar-primary-foreground: #030712;
+  --sidebar-accent: rgba(34, 211, 238, 0.1);
+  --sidebar-accent-foreground: #22d3ee;
+  --sidebar-border: rgba(34, 211, 238, 0.1);
+  --sidebar-ring: #22d3ee;
+
+  /* Font Assignment */
+  --font-heading: var(--font-jetbrains-mono);
 }
 
-/* ============================================================
-   DARK MODE
-   ============================================================ */
-.dark {
-  /* Base — cool dark navy */
-  --background: #0D1530;
-  --foreground: #ECEEF0;
-
-  /* Card */
-  --card: #172044;
-  --card-foreground: #ECEEF0;
-
-  /* Popover */
-  --popover: #172044;
-  --popover-foreground: #ECEEF0;
-
-  /* Primary — same blue */
-  --primary: #5A77DF;
-  --primary-foreground: #FFFFFF;
-
-  /* Secondary */
-  --secondary: #3E53A0;
-  --secondary-foreground: #ECEEF0;
-
-  /* Muted */
-  --muted: #1B2748;
-  --muted-foreground: #CCD4DE;
-
-  /* Accent */
-  --accent: #3E53A0;
-  --accent-foreground: #ECEEF0;
-
-  /* Destructive */
-  --destructive: #EF4444;
-
-  /* Border / Input / Ring */
-  --border: #323954;
-  --input: #323954;
-  --ring: #5A77DF;
-
-  /* Charts */
-  --chart-1: #5A77DF;
-  --chart-2: #7090C8;
-  --chart-3: #9EB2D0;
-  --chart-4: #CCD4DE;
-  --chart-5: #3E53A0;
-
-  /* Sidebar — darkest navy from palette */
-  --sidebar: #08112F;
-  --sidebar-foreground: #ECEEF0;
-  --sidebar-primary: #5A77DF;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #3E53A0;
-  --sidebar-accent-foreground: #ECEEF0;
-  --sidebar-border: #323954;
-  --sidebar-ring: #5A77DF;
-}
 
 /* ============================================================
    BASE LAYER
    ============================================================ */
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
   }
   body {
     @apply bg-background text-foreground;
+    background-image: 
+      radial-gradient(circle at 2px 2px, rgba(34, 211, 238, 0.05) 1px, transparent 0);
+    background-size: 32px 32px;
   }
   html {
     @apply font-sans;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-sans);
+    font-family: var(--font-heading);
     font-weight: 600;
     letter-spacing: -0.02em;
   }
@@ -206,52 +218,79 @@
    ============================================================ */
 @layer utilities {
   .heading-serif {
-    font-family: var(--font-sans);
+    font-family: var(--font-jetbrains-mono);
     font-weight: 600;
     letter-spacing: -0.02em;
   }
 
-  .card-warm {
-    background-color: var(--card);
+  .glass-card {
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.05);
   }
 
-  /* Badge — blue light (replaces badge-sage) */
+  .dark .glass-card {
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+    border: 2px solid var(--background);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+    opacity: 0.5;
+  }
+
+  /* Badge — Theme aware */
   .badge-sage {
-    background-color: #E8EDF9;
-    color: #3E53A0;
-    border: 1px solid #CCD4DE;
-    border-radius: 9999px;
-    padding: 0.125rem 0.625rem;
-    font-size: 0.75rem;
-    font-weight: 500;
+    background-color: var(--accent);
+    color: var(--primary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
     display: inline-flex;
     align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  /* Badge — medium blue (replaces badge-amber) */
   .badge-amber {
-    background-color: #dce5f8;
-    color: #3E53A0;
-    border: 1px solid #b3c4ee;
-    border-radius: 9999px;
-    padding: 0.125rem 0.625rem;
-    font-size: 0.75rem;
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.7rem;
     font-weight: 500;
+    font-family: var(--font-mono);
     display: inline-flex;
     align-items: center;
   }
 
-  /* Badge — neutral (replaces badge-stone) */
   .badge-stone {
-    background-color: #ECEEF0;
-    color: #323954;
-    border: 1px solid #CCD4DE;
-    border-radius: 9999px;
-    padding: 0.125rem 0.625rem;
-    font-size: 0.75rem;
+    background-color: var(--card);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.7rem;
     font-weight: 500;
+    font-family: var(--font-mono);
     display: inline-flex;
     align-items: center;
   }
@@ -278,26 +317,14 @@
     }
   }
 
-  /* Dark mode badge overrides */
-  .dark .badge-sage {
-    background-color: #1B2748;
-    color: #9EB2D0;
-    border-color: #323954;
-  }
-
-  .dark .badge-amber {
-    background-color: #1B2748;
-    color: #5A77DF;
-    border-color: #323954;
-  }
-
+  /* Dark mode badge overrides - keep them unified */
+  .dark .badge-sage,
+  .dark .badge-amber,
   .dark .badge-stone {
-    background-color: #172044;
-    color: #CCD4DE;
-    border-color: #323954;
+    /* Theme is already dark by default */
   }
 
   .dark .card-warm {
-    border-color: #323954;
+    border-color: rgba(34, 211, 238, 0.2);
   }
 }

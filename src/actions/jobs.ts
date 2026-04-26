@@ -5,6 +5,7 @@ import { getUser } from "@/lib/get-user";
 import { revalidatePath } from "next/cache";
 import { createJobSchema, applyToJobSchema } from "@/validations/jobs";
 import type { CreateJobInput } from "@/validations/jobs";
+import { createNotification } from "@/actions/notifications";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -261,7 +262,33 @@ export async function updateApplicationStatus(
     .eq("id", applicationId);
 
   if (error) return { ok: false, error: "Failed to update status." };
+
+  // Create notification for the student
+  if (status === "accepted" || status === "rejected") {
+    const { data: appData } = await supabase
+      .from("job_applications")
+      .select("student_id, job:job_postings(title, company)")
+      .eq("id", applicationId)
+      .single();
+
+    if (appData) {
+      const jobInfo = appData.job as any;
+      const title = status === "accepted" ? "Application Accepted! 🎉" : "Application Update";
+      const body = status === "accepted" 
+        ? `Congratulations! Your application for ${jobInfo.title} at ${jobInfo.company} has been accepted.`
+        : `Your application for ${jobInfo.title} at ${jobInfo.company} was not selected at this time.`;
+
+      await createNotification(appData.student_id, {
+        type: "application" as any,
+        title,
+        body,
+        link: "/jobs/applications",
+      });
+    }
+  }
+
   revalidatePath(`/jobs/${application.job_id}/applications`);
+  revalidatePath("/jobs/applications");
   return { ok: true };
 }
 

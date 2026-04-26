@@ -42,7 +42,9 @@ export async function GET(request: Request) {
 
   try {
     // ── Exchange code for access token ───────────────────────────────────
-    const accessToken = await exchangeCodeForToken(code);
+    const { origin } = new URL(request.url);
+    const redirectUri = `${origin}/api/webhooks/github`;
+    const accessToken = await exchangeCodeForToken(code, redirectUri);
 
     // ── Fetch GitHub username ────────────────────────────────────────────
     const githubUser = await fetchGitHubUser(accessToken);

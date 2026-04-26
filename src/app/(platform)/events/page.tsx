@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, CalendarDays } from "lucide-react";
 import { getUser } from "@/lib/get-user";
 import { getEvents, getOrganizerEvents, type EventFilters } from "@/actions/events";
 import { EventCard } from "@/components/events/event-card";
@@ -45,25 +45,28 @@ export default async function EventsPage({
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
-      <div className="rounded-2xl bg-linear-to-r from-indigo-600 to-purple-600 p-8 text-white">
-        <div className="flex items-start justify-between gap-4">
+      <div className="glass-card p-8 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-8 opacity-10 transition-transform group-hover:scale-110">
+          <CalendarDays className="size-24 text-primary" />
+        </div>
+        <div className="flex items-start justify-between gap-4 relative z-10">
           <div>
-            <h1 className="text-2xl font-bold">
-              {isOrganizer ? "My Events" : "Events"}
+            <h1 className="font-mono text-3xl font-bold tracking-tight text-white">
+              <span className="text-primary">Module:</span> {isOrganizer ? "My Events" : "Events"}
             </h1>
-            <p className="mt-1 text-sm text-white/80 font-sans font-normal">
+            <p className="mt-2 text-muted-foreground font-sans font-normal max-w-lg">
               {isOrganizer
-                ? "Events and hackathons you have organised."
-                : "Discover upcoming hackathons, workshops, and academic events."}
+                ? "Manage your organized sequences and hackathon events."
+                : "Discover upcoming hackathons, workshops, and academic events in the network."}
             </p>
           </div>
           {isOrganizer && (
             <Link
               href="/events/create"
-              className="shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-white text-indigo-600 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors"
+              className="shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-mono font-bold text-sm hover:opacity-90 transition-all shadow-[0_0_15px_rgba(34,211,238,0.3)]"
             >
               <PlusCircle className="size-4" />
-              Create event
+              Initialize Event
             </Link>
           )}
         </div>
@@ -78,20 +81,23 @@ export default async function EventsPage({
 
       {/* Events grid */}
       {events.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white py-16 text-center shadow-sm">
-          <p className="text-muted-foreground text-sm">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-primary/20 bg-primary/5 py-16 text-center">
+          <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+            <CalendarDays className="size-6 text-primary/40" />
+          </div>
+          <p className="text-muted-foreground font-mono text-sm uppercase tracking-wider">
             {isOrganizer
-              ? "You haven't created any events yet."
-              : "No upcoming events found."}
+              ? "Zero event protocols found"
+              : "No upcoming event sequences found"}
           </p>
           {isOrganizer && (
             <Button
               render={<Link href="/events/create" />}
               variant="outline"
               size="sm"
-              className="mt-4"
+              className="mt-6 border-primary/30 text-primary hover:bg-primary/10"
             >
-              Create your first event
+              Create first event
             </Button>
           )}
         </div>

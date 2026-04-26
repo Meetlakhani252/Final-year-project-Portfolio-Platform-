@@ -21,7 +21,7 @@ export default async function OnboardingPage() {
   // Skip if already completed
   const { data: profile } = await supabase
     .from("profiles")
-    .select("onboarding_completed, full_name")
+    .select("onboarding_completed, full_name, username")
     .eq("id", user.id)
     .single();
 
@@ -31,11 +31,12 @@ export default async function OnboardingPage() {
 
   const initialName =
     (user.user_metadata?.full_name as string) ?? profile?.full_name ?? "";
+  const initialUsername = profile?.username ?? "";
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 px-4 py-12">
       <div className="w-full max-w-lg">
-        <OnboardingWizard initialName={initialName} />
+        <OnboardingWizard initialName={initialName} initialUsername={initialUsername} />
       </div>
     </div>
   );

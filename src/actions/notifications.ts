@@ -1,11 +1,11 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 export type NotificationItem = {
   id: string;
-  type: "comment" | "dm" | "team_match" | "event_new" | "forum_reply";
+  type: "comment" | "dm" | "team_match" | "event_new" | "forum_reply" | "application";
   title: string;
   body: string | null;
   link: string | null;
@@ -128,5 +128,34 @@ export async function markAllNotificationsRead(): Promise<ActionResult> {
     .eq("is_read", false);
 
   if (error) return { ok: false, error: "Failed to mark all as read." };
+  return { ok: true };
+}
+
+// ─── createNotification (Internal helper) ─────────────────────────────────────
+
+export async function createNotification(
+  profileId: string,
+  data: Pick<NotificationItem, "type" | "title" | "body" | "link">
+): Promise<ActionResult> {
+  const supabase = await createAdminClient();
+
+  // Fallback type if the database constraint hasn't been updated yet
+  const safeType = ["comment", "dm", "team_match", "event_new", "forum_reply"].includes(data.type) 
+    ? data.type 
+    : "event_new";
+
+  const { error } = await supabase.from("notifications").insert({
+    profile_id: profileId,
+    type: safeType,
+    title: data.title,
+    body: data.body,
+    link: data.link,
+  });
+
+  if (error) {
+    console.error("Failed to create notification:", error);
+    return { ok: false, error: "Failed to create notification." };
+  }
+
   return { ok: true };
 }

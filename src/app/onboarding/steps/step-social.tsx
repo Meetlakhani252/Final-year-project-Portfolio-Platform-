@@ -48,6 +48,7 @@ export function StepSocial() {
     startTransition(async () => {
       const formData = new FormData();
       formData.append("full_name", data.full_name);
+      formData.append("username", data.username);
       formData.append("bio", data.bio);
       formData.append("university", data.university);
       formData.append("program", data.program);

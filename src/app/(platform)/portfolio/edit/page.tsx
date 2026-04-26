@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import { Briefcase, Layers } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PortfolioEditTabs } from "@/components/portfolio/portfolio-edit-tabs";
 
@@ -66,15 +67,27 @@ export default async function PortfolioEditPage() {
     .eq("profile_id", user.id);
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Edit Portfolio</h1>
-        <p className="text-sm text-muted-foreground">
-          Update the sections that appear on your public portfolio at /u/
-          {profile.username}
-        </p>
-      </header>
-      <Suspense>
+    <div className="mx-auto w-full max-w-6xl py-8 space-y-10">
+      <div className="glass-card p-8 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-8 opacity-10 transition-transform group-hover:scale-110">
+          <Briefcase className="size-24 text-primary" />
+        </div>
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
+            <Layers className="size-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="font-mono text-3xl font-bold tracking-tight text-foreground">
+              <span className="text-primary">Workspace:</span> Portfolio Editor
+            </h1>
+            <p className="mt-1 text-muted-foreground font-sans font-normal">
+              Modify your digital identity sequences at /u/{profile.username}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <Suspense fallback={<div className="h-96 flex items-center justify-center font-mono text-primary animate-pulse">Initializing Editor Protocol...</div>}>
         <PortfolioEditTabs
           profile={profile}
           projects={projects ?? []}

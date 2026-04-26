@@ -123,9 +123,24 @@ export async function signIn(data: SignInInput): Promise<AuthResult> {
   }
 
   const supabase = await createClient();
+  let email = parsed.data.identifier;
+
+  // If identifier doesn't look like an email, assume it's a username
+  if (!email.includes("@")) {
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("email")
+      .eq("username", email)
+      .single();
+
+    if (profileError || !profile) {
+      return { error: "Invalid username or password" };
+    }
+    email = profile.email;
+  }
 
   const { error } = await supabase.auth.signInWithPassword({
-    email: parsed.data.email,
+    email,
     password: parsed.data.password,
   });
 

@@ -5,25 +5,24 @@ import { useOnboardingStore } from "@/stores/onboarding-store";
 import { Logo } from "@/components/shared/logo";
 import { Progress } from "@/components/ui/progress";
 import { StepProfile } from "./steps/step-profile";
+import { StepIdentity } from "./steps/step-identity";
 import { StepEducation } from "./steps/step-education";
 import { StepSkills } from "./steps/step-skills";
 import { StepSocial } from "./steps/step-social";
 
-const STEP_LABELS = ["Profile", "Education", "Skills", "Links"];
+const STEP_LABELS = ["Profile", "Identity", "Education", "Skills", "Links"];
 
-export function OnboardingWizard({ initialName }: { initialName: string }) {
+  export function OnboardingWizard({ initialName, initialUsername }: { initialName: string, initialUsername: string }) {
   const step = useOnboardingStore((s) => s.step);
   const updateData = useOnboardingStore((s) => s.updateData);
 
   useEffect(() => {
-    if (initialName) {
-      updateData({ full_name: initialName });
-    }
+    updateData({ full_name: initialName, username: initialUsername });
     // Only run once on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const progressValue = (step / 4) * 100;
+  const progressValue = (step / 5) * 100;
 
   return (
     <div className="space-y-6">
@@ -42,9 +41,10 @@ export function OnboardingWizard({ initialName }: { initialName: string }) {
       </div>
 
       {step === 1 && <StepProfile />}
-      {step === 2 && <StepEducation />}
-      {step === 3 && <StepSkills />}
-      {step === 4 && <StepSocial />}
+      {step === 2 && <StepIdentity />}
+      {step === 3 && <StepEducation />}
+      {step === 4 && <StepSkills />}
+      {step === 5 && <StepSocial />}
     </div>
   );
 }

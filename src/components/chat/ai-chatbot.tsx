@@ -60,7 +60,7 @@ export function AiChatbot() {
       {/* ── Floating Action Button ── */}
       <Button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 size-14 rounded-full shadow-lg transition-all duration-300 hover:scale-105 z-50 ${
+        className={`fixed bottom-6 right-6 size-14 rounded-full shadow-[0_0_20px_rgba(34,211,238,0.3)] transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] z-50 bg-primary text-primary-foreground ${
           isOpen ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100"
         }`}
         aria-label="Open AI Assistant"
@@ -70,14 +70,14 @@ export function AiChatbot() {
 
       {/* ── Chat Window ── */}
       <div
-        className={`fixed bottom-6 right-6 z-50 flex w-[350px] flex-col overflow-hidden rounded-2xl border bg-background shadow-2xl transition-all duration-300 sm:w-[400px] ${
+        className={`fixed bottom-6 right-6 z-50 flex w-[350px] flex-col overflow-hidden rounded-2xl glass-card transition-all duration-300 sm:w-[400px] ${
           isOpen
             ? "translate-y-0 opacity-100 h-[600px] max-h-[80vh]"
             : "translate-y-8 opacity-0 h-[600px] max-h-[80vh] pointer-events-none"
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between bg-primary px-4 py-3 text-primary-foreground shadow-sm">
+        <div className="flex items-center justify-between bg-primary/20 backdrop-blur-md px-4 py-3 text-primary-foreground shadow-sm border-b border-primary/20">
           <div className="flex items-center gap-3">
             <div className="flex size-8 items-center justify-center rounded-full bg-primary-foreground/20">
               <Bot className="size-5" />
@@ -129,10 +129,10 @@ export function AiChatbot() {
                   )}
                 </Avatar>
                 <div
-                  className={`px-4 py-2.5 text-sm max-w-[80%] whitespace-pre-wrap shadow-sm ${
+                  className={`px-4 py-2.5 text-sm max-w-[80%] whitespace-pre-wrap ${
                     m.role === "user"
-                      ? "bg-primary text-primary-foreground rounded-2xl rounded-tr-sm"
-                      : "bg-background text-foreground border border-border/50 rounded-2xl rounded-tl-sm"
+                      ? "bg-primary/20 text-primary-foreground rounded-2xl rounded-tr-sm border border-primary/30"
+                      : "bg-white/5 text-foreground border border-white/10 rounded-2xl rounded-tl-sm backdrop-blur-sm"
                   }`}
                 >
                   {(m as any).content || m.parts?.map((part, i) => (
