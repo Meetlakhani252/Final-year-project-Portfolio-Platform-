@@ -1084,6 +1084,113 @@ export type Database = {
           },
         ];
       };
+      job_postings: {
+        Row: {
+          id: string;
+          recruiter_id: string;
+          title: string;
+          company: string;
+          type: "job" | "internship";
+          location: string | null;
+          location_type: "onsite" | "remote" | "hybrid";
+          salary_min: number | null;
+          salary_max: number | null;
+          description: string;
+          required_skills: string[];
+          application_deadline: string | null;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          recruiter_id: string;
+          title: string;
+          company: string;
+          type: "job" | "internship";
+          location?: string | null;
+          location_type: "onsite" | "remote" | "hybrid";
+          salary_min?: number | null;
+          salary_max?: number | null;
+          description: string;
+          required_skills: string[];
+          application_deadline?: string | null;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          recruiter_id?: string;
+          title?: string;
+          company?: string;
+          type?: "job" | "internship";
+          location?: string | null;
+          location_type?: "onsite" | "remote" | "hybrid";
+          salary_min?: number | null;
+          salary_max?: number | null;
+          description?: string;
+          required_skills?: string[];
+          application_deadline?: string | null;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "job_postings_recruiter_id_fkey";
+            columns: ["recruiter_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      job_applications: {
+        Row: {
+          id: string;
+          job_id: string;
+          student_id: string;
+          cover_letter: string | null;
+          status: "pending" | "reviewing" | "accepted" | "rejected";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          job_id: string;
+          student_id: string;
+          cover_letter?: string | null;
+          status?: "pending" | "reviewing" | "accepted" | "rejected";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          job_id?: string;
+          student_id?: string;
+          cover_letter?: string | null;
+          status?: "pending" | "reviewing" | "accepted" | "rejected";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "job_applications_job_id_fkey";
+            columns: ["job_id"];
+            isOneToOne: false;
+            referencedRelation: "job_postings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "job_applications_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       notifications: {
         Row: {
           id: string;
