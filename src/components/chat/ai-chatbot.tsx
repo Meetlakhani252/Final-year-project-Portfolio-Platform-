@@ -10,23 +10,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 export function AiChatbot() {
   const [isOpen, setIsOpen] = useState(false);
   
-  const { messages, sendMessage, status, stop } = useChat({
-    api: "/api/chat",
-  });
-  
-  const [input, setInput] = useState("");
-  const isLoading = status === "submitted" || status === "streaming";
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
-  };
-
-  const handleSubmit = (e?: React.FormEvent) => {
-    e?.preventDefault();
-    if (!input.trim() || isLoading) return;
-    sendMessage({ text: input });
-    setInput("");
-  };
+  const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat();
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
