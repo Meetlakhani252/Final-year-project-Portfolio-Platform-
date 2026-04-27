@@ -22,7 +22,7 @@ export function JobsFilter() {
   const locationType = params.get("location_type") ?? "";
   const skill = params.get("skill") ?? "";
 
-  function applyFilter(key: string, value: string) {
+  function applyFilter(key: string, value: string | null) {
     const next = new URLSearchParams(params.toString());
     if (value) next.set(key, value);
     else next.delete(key);

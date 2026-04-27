@@ -9,53 +9,44 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function AiChatbot() {
   const [isOpen, setIsOpen] = useState(false);
-  
   const [input, setInput] = useState("");
-  const { messages, append, isLoading, stop } = useChat();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
-  };
+  const { messages, sendMessage, status, stop } = useChat();
 
-  const handleSubmit = async (e?: React.FormEvent) => {
+  const isLoading = status === "submitted" || status === "streaming";
+
+  const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!input.trim() || isLoading) return;
-    
-    const content = input;
+    sendMessage({ text: input });
     setInput("");
-    await append({ role: "user", content });
   };
-  
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-scroll to bottom of chat when new messages arrive
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
-  // Focus input automatically when opened
   useEffect(() => {
     if (isOpen && textareaRef.current) {
       setTimeout(() => textareaRef.current?.focus(), 100);
     }
   }, [isOpen]);
 
-  // Submit on Enter (prevent default newline, use Shift+Enter for newline)
   function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      if ((input || "").trim() && !isLoading) {
-        handleSubmit(e as any);
-      }
+      if (input.trim() && !isLoading) handleSubmit();
     }
   }
 
   return (
     <>
-      {/* ── Floating Action Button ── */}
+      {/* Floating Action Button */}
       <Button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 size-14 rounded-full shadow-[0_0_20px_rgba(34,211,238,0.3)] transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] z-50 bg-primary text-primary-foreground ${
@@ -66,7 +57,7 @@ export function AiChatbot() {
         <MessageCircle className="size-6" />
       </Button>
 
-      {/* ── Chat Window ── */}
+      {/* Chat Window */}
       <div
         className={`fixed bottom-6 right-6 z-50 flex w-[350px] flex-col overflow-hidden rounded-2xl glass-card transition-all duration-300 sm:w-[400px] ${
           isOpen
@@ -82,7 +73,7 @@ export function AiChatbot() {
             </div>
             <div>
               <h3 className="font-semibold text-sm leading-tight">Profolio AI</h3>
-              <p className="text-[10px] text-primary-foreground/80 font-medium">Powered by Claude</p>
+              <p className="text-[10px] text-primary-foreground/80 font-medium">Powered by Groq</p>
             </div>
           </div>
           <Button
@@ -133,9 +124,9 @@ export function AiChatbot() {
                       : "bg-white/5 text-foreground border border-white/10 rounded-2xl rounded-tl-sm backdrop-blur-sm"
                   }`}
                 >
-                  {(m as any).content || m.parts?.map((part, i) => (
+                  {m.parts?.map((part, i) =>
                     part.type === "text" ? <span key={i}>{part.text}</span> : null
-                  ))}
+                  )}
                 </div>
               </div>
             ))
@@ -161,30 +152,35 @@ export function AiChatbot() {
 
         {/* Input Area */}
         <div className="border-t bg-background p-3">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if ((input || "").trim()) handleSubmit(e);
-            }}
-            className="flex items-end gap-2 relative"
-          >
+          <form onSubmit={handleSubmit} className="flex items-end gap-2 relative">
             <Textarea
               ref={textareaRef}
               value={input}
-              onChange={handleInputChange}
+              onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder="Ask anything..."
               className="min-h-[2.75rem] max-h-32 resize-none rounded-2xl pr-12 text-sm bg-muted/40 focus-visible:ring-primary/30 border-border/60"
               rows={1}
             />
-            <Button
-              type="submit"
-              size="icon"
-              disabled={isLoading || !(input || "").trim()}
-              className="absolute right-1.5 bottom-1.5 size-8 rounded-full transition-transform hover:scale-105 active:scale-95"
-            >
-              <Send className="size-3.5 -ml-0.5" />
-            </Button>
+            {isLoading ? (
+              <Button
+                type="button"
+                size="icon"
+                onClick={stop}
+                className="absolute right-1.5 bottom-1.5 size-8 rounded-full"
+              >
+                <span className="size-3 rounded-sm bg-current" />
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                size="icon"
+                disabled={!input.trim()}
+                className="absolute right-1.5 bottom-1.5 size-8 rounded-full transition-transform hover:scale-105 active:scale-95"
+              >
+                <Send className="size-3.5 -ml-0.5" />
+              </Button>
+            )}
           </form>
           <div className="mt-2 flex justify-center">
             <span className="text-[9px] text-muted-foreground font-medium">
