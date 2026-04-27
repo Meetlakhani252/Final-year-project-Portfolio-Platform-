@@ -8,6 +8,7 @@ import {
   MessagesSquare,
   Bell,
   Briefcase,
+  Rss,
 } from "lucide-react";
 import type { NotificationItem } from "@/actions/notifications";
 
@@ -18,6 +19,7 @@ const TYPE_ICON: Record<NotificationItem["type"], React.ElementType> = {
   event_new: CalendarDays,
   forum_reply: MessagesSquare,
   application: Briefcase,
+  job_post: Rss,
 };
 
 function timeAgo(dateString: string): string {

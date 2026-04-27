@@ -32,7 +32,9 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { ConnectButton } from "@/components/shared/connect-button";
+import { RecruiterSubscribeButton } from "@/components/shared/recruiter-subscribe-button";
 import { checkConnection } from "@/actions/connections";
+import { checkRecruiterSubscription } from "@/actions/recruiter-subscriptions";
 import { getUser } from "@/lib/get-user";
 
 export const revalidate = 3600;
@@ -113,7 +115,16 @@ export default async function PublicPortfolioPage({
 
   // Fetch current viewer
   const currentUser = await getUser().catch(() => null);
-  const isConnected = profile ? await checkConnection(profile.id) : false;
+
+  const isRecruiterProfile = profile.role === "recruiter";
+  const viewerIsStudent = currentUser?.role === "student";
+
+  const [isConnected, isSubscribed] = await Promise.all([
+    !isRecruiterProfile && profile ? checkConnection(profile.id) : Promise.resolve(false),
+    isRecruiterProfile && viewerIsStudent && profile
+      ? checkRecruiterSubscription(profile.id)
+      : Promise.resolve(false),
+  ]);
 
   let currentUserRole: string | null = null;
   if (currentUser) {
@@ -235,11 +246,19 @@ export default async function PublicPortfolioPage({
             <div className="flex flex-wrap gap-4 pt-2">
               {currentUser && currentUser.id !== profile.id && (
                 <>
-                  <ConnectButton
-                    targetId={profile.id}
-                    initialIsConnected={isConnected}
-                    className="w-full sm:w-auto"
-                  />
+                  {isRecruiterProfile && viewerIsStudent ? (
+                    <RecruiterSubscribeButton
+                      recruiterId={profile.id}
+                      initialIsSubscribed={isSubscribed}
+                      className="w-full sm:w-auto"
+                    />
+                  ) : !isRecruiterProfile && (
+                    <ConnectButton
+                      targetId={profile.id}
+                      initialIsConnected={isConnected}
+                      className="w-full sm:w-auto"
+                    />
+                  )}
                   <SendMessageButton
                     recipientId={profile.id}
                     className="w-full sm:w-auto shadow-[0_0_20px_rgba(34,211,238,0.2)]"

@@ -252,3 +252,22 @@ export async function verifyEmailOtp(
 
   redirect("/dashboard");
 }
+
+export async function verifySignupOtp(
+  email: string,
+  token: string
+): Promise<AuthResult> {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "signup",
+  });
+
+  if (error) {
+    return { error: "Invalid or expired code. Please try again." };
+  }
+
+  redirect("/onboarding");
+}

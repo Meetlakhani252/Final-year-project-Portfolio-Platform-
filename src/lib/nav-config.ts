@@ -9,7 +9,8 @@ export type NavIconName =
   | "bookmarks"
   | "messages"
   | "create-event"
-  | "jobs";
+  | "jobs"
+  | "feed";
 
 export interface NavItem {
   label: string;
@@ -25,6 +26,7 @@ export const STUDENT_NAV: NavItem[] = [
   { label: "Events", href: "/events", icon: "events" },
   { label: "Teams", href: "/teams", icon: "teams" },
   { label: "Jobs", href: "/jobs", icon: "jobs" },
+  { label: "Feed", href: "/feed", icon: "feed" },
   { label: "Messages", href: "/messages", icon: "messages" },
 ];
 

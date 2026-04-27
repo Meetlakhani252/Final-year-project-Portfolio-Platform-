@@ -14,6 +14,7 @@ import {
   Bookmark,
   CalendarPlus,
   Building2,
+  Rss,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,7 @@ const ICONS: Record<NavIconName, LucideIcon> = {
   messages: MessageSquare,
   "create-event": CalendarPlus,
   jobs: Building2,
+  feed: Rss,
 };
 
 export function NavLink({

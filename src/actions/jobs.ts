@@ -78,6 +78,36 @@ export async function createJobPosting(
 
   if (error || !data) return { ok: false, error: "Failed to create job posting." };
   revalidatePath("/jobs");
+  revalidatePath("/feed");
+
+  // Notify all students subscribed to this recruiter
+  const adminSupabase = await import("@/lib/supabase/server").then((m) =>
+    m.createAdminClient()
+  );
+  const { data: subscribers } = await adminSupabase
+    .from("recruiter_subscriptions")
+    .select("student_id")
+    .eq("recruiter_id", user.id);
+
+  if (subscribers && subscribers.length > 0) {
+    const { data: recruiterProfile } = await adminSupabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .single();
+
+    await Promise.all(
+      subscribers.map((sub) =>
+        createNotification(sub.student_id, {
+          type: "job_post",
+          title: `New ${parsed.data.type === "internship" ? "internship" : "job"} posted: ${parsed.data.title}`,
+          body: `${recruiterProfile?.full_name ?? "A recruiter"} at ${parsed.data.company} is hiring.`,
+          link: `/feed`,
+        })
+      )
+    );
+  }
+
   return { ok: true, id: data.id };
 }
 

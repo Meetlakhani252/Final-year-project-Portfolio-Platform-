@@ -1200,7 +1200,9 @@ export type Database = {
             | "dm"
             | "team_match"
             | "event_new"
-            | "forum_reply";
+            | "forum_reply"
+            | "application"
+            | "job_post";
           title: string;
           body: string | null;
           link: string | null;
@@ -1217,7 +1219,8 @@ export type Database = {
             | "team_match"
             | "event_new"
             | "forum_reply"
-            | "application";
+            | "application"
+            | "job_post";
           title: string;
           body?: string | null;
           link?: string | null;
@@ -1234,7 +1237,8 @@ export type Database = {
             | "team_match"
             | "event_new"
             | "forum_reply"
-            | "application";
+            | "application"
+            | "job_post";
           title?: string;
           body?: string | null;
           link?: string | null;
@@ -1320,6 +1324,42 @@ export type Database = {
           {
             foreignKeyName: "connections_following_id_fkey";
             columns: ["following_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      recruiter_subscriptions: {
+        Row: {
+          id: string;
+          student_id: string;
+          recruiter_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          student_id: string;
+          recruiter_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          student_id?: string;
+          recruiter_id?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "recruiter_subscriptions_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_subscriptions_recruiter_id_fkey";
+            columns: ["recruiter_id"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];

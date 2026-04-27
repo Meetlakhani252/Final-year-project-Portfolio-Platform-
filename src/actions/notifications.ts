@@ -5,7 +5,7 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 export type NotificationItem = {
   id: string;
-  type: "comment" | "dm" | "team_match" | "event_new" | "forum_reply" | "application";
+  type: "comment" | "dm" | "team_match" | "event_new" | "forum_reply" | "application" | "job_post";
   title: string;
   body: string | null;
   link: string | null;

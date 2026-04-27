@@ -4,7 +4,8 @@ import { useTransition, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { signUp, signInWithGithub } from "@/actions/auth";
+import { ArrowLeft } from "lucide-react";
+import { signUp, signInWithGithub, verifySignupOtp } from "@/actions/auth";
 import { signUpSchema, type SignUpInput } from "@/validations/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,9 @@ export default function SignUpPage() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [checkEmail, setCheckEmail] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpError, setOtpError] = useState<string | null>(null);
 
   const {
     formState: { errors },
@@ -53,10 +57,23 @@ export default function SignUpPage() {
     startTransition(async () => {
       const result = await signUp(data);
       if (result?.error === "CHECK_EMAIL") {
+        setPendingEmail(data.email);
         setCheckEmail(true);
       } else if (result?.error) {
         setError(result.error);
       }
+    });
+  }
+
+  function handleVerifyOtp() {
+    if (!otpCode || otpCode.trim().length < 6) {
+      setOtpError("Please enter the full 6-digit code");
+      return;
+    }
+    setOtpError(null);
+    startTransition(async () => {
+      const result = await verifySignupOtp(pendingEmail, otpCode.trim());
+      if (result?.error) setOtpError(result.error);
     });
   }
 
@@ -74,16 +91,54 @@ export default function SignUpPage() {
     return (
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Check your email</CardTitle>
+          <CardTitle className="text-2xl">Verify your email</CardTitle>
           <CardDescription>
-            We sent a confirmation link to your email address. Click it to
-            activate your account, then sign in.
+            We sent a 6-digit code to{" "}
+            <span className="font-medium text-foreground">{pendingEmail}</span>.
+            Enter it below to activate your account.
           </CardDescription>
         </CardHeader>
+        <CardContent className="space-y-4">
+          {otpError && (
+            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+              {otpError}
+            </div>
+          )}
+          <div className="space-y-2">
+            <Input
+              type="text"
+              inputMode="numeric"
+              placeholder="123456"
+              maxLength={6}
+              value={otpCode}
+              onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
+              onKeyDown={(e) => e.key === "Enter" && handleVerifyOtp()}
+              autoFocus
+              className="text-center tracking-widest text-lg font-mono"
+            />
+            <Button className="w-full" onClick={handleVerifyOtp} disabled={isPending}>
+              {isPending ? "Verifying..." : "Verify & Continue"}
+            </Button>
+          </div>
+          <p className="text-center text-xs text-muted-foreground">
+            Didn&apos;t receive a code?{" "}
+            <button
+              type="button"
+              onClick={() => { setCheckEmail(false); setOtpCode(""); setOtpError(null); }}
+              className="text-primary hover:underline"
+            >
+              Go back
+            </button>{" "}
+            or check your spam folder.
+          </p>
+        </CardContent>
         <CardFooter className="justify-center">
-          <Link href="/login" className="text-sm text-primary hover:underline">
-            Go to sign in
-          </Link>
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <ArrowLeft className="size-3" />
+            <Link href="/login" className="text-primary hover:underline">
+              Back to sign in
+            </Link>
+          </div>
         </CardFooter>
       </Card>
     );
