@@ -23,8 +23,6 @@ const NOTIFICATION_SUBJECTS: Record<NotificationEmailProps["type"], string> = {
   forum_reply: "New reply on your forum post",
 };
 
-// ─── sendNotificationEmail ────────────────────────────────────────────────────
-
 export async function sendNotificationEmail(
   to: string,
   props: NotificationEmailProps
@@ -42,8 +40,6 @@ export async function sendNotificationEmail(
     return false;
   }
 }
-
-// ─── sendWelcomeEmail ─────────────────────────────────────────────────────────
 
 export async function sendWelcomeEmail(
   to: string,

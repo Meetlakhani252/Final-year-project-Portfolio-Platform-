@@ -17,8 +17,6 @@ export type ActionResult<T = undefined> =
   | { ok: true; data?: T }
   | { ok: false; error: string };
 
-// ─── getUnreadNotificationCount ───────────────────────────────────────────────
-
 export async function getUnreadNotificationCount(): Promise<number> {
   const supabase = await createClient();
   const {
@@ -34,8 +32,6 @@ export async function getUnreadNotificationCount(): Promise<number> {
 
   return count ?? 0;
 }
-
-// ─── getRecentNotifications (dropdown — latest 10) ───────────────────────────
 
 export async function getRecentNotifications(): Promise<NotificationItem[]> {
   const supabase = await createClient();
@@ -53,8 +49,6 @@ export async function getRecentNotifications(): Promise<NotificationItem[]> {
 
   return (data as NotificationItem[] | null) ?? [];
 }
-
-// ─── getNotificationPage (full page, cursor-paginated) ───────────────────────
 
 export async function getNotificationPage(
   filter: "all" | "unread" = "all",
@@ -93,8 +87,6 @@ export async function getNotificationPage(
   };
 }
 
-// ─── markNotificationRead ────────────────────────────────────────────────────
-
 export async function markNotificationRead(id: string): Promise<ActionResult> {
   const supabase = await createClient();
   const {
@@ -112,8 +104,6 @@ export async function markNotificationRead(id: string): Promise<ActionResult> {
   return { ok: true };
 }
 
-// ─── markAllNotificationsRead ─────────────────────────────────────────────────
-
 export async function markAllNotificationsRead(): Promise<ActionResult> {
   const supabase = await createClient();
   const {
@@ -130,8 +120,6 @@ export async function markAllNotificationsRead(): Promise<ActionResult> {
   if (error) return { ok: false, error: "Failed to mark all as read." };
   return { ok: true };
 }
-
-// ─── createNotification (Internal helper) ─────────────────────────────────────
 
 export async function createNotification(
   profileId: string,

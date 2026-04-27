@@ -29,8 +29,6 @@ export type StudentResult = {
   skills: string[];
 };
 
-// ─── discoverStudents ─────────────────────────────────────────────────────────
-
 export async function discoverStudents(filters: DiscoverFilters): Promise<{
   students: StudentResult[];
   total: number;
@@ -137,8 +135,6 @@ export async function discoverStudents(filters: DiscoverFilters): Promise<{
   return { students, total: count ?? 0 };
 }
 
-// ─── getBookmarks ─────────────────────────────────────────────────────────────
-
 export type BookmarkResult = {
   bookmarkId: string;
   notes: string | null;
@@ -210,8 +206,6 @@ export async function getBookmarks(): Promise<BookmarkResult[]> {
     });
 }
 
-// ─── updateBookmarkNotes ──────────────────────────────────────────────────────
-
 export async function updateBookmarkNotes(
   bookmarkId: string,
   notes: string
@@ -229,8 +223,6 @@ export async function updateBookmarkNotes(
   if (error) return { ok: false, error: "Failed to save notes." };
   return { ok: true };
 }
-
-// ─── toggleBookmark ───────────────────────────────────────────────────────────
 
 export async function toggleBookmark(
   studentId: string
@@ -264,8 +256,6 @@ export async function toggleBookmark(
   if (error) return { ok: false, error: "Failed to bookmark student." };
   return { ok: true, bookmarked: true };
 }
-
-// ─── getBookmarkedStudentIds ──────────────────────────────────────────────────
 
 export async function getBookmarkedStudentIds(): Promise<string[]> {
   const user = await getUser();

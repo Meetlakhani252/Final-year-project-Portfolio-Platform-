@@ -15,8 +15,6 @@ import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Jobs — Profolio" };
 
-// ─── Recruiter view ───────────────────────────────────────────────────────────
-
 async function RecruiterView() {
   const jobs = await getMyJobPostings();
   return (
@@ -52,8 +50,6 @@ async function RecruiterView() {
     </div>
   );
 }
-
-// ─── Student view ─────────────────────────────────────────────────────────────
 
 async function StudentView({
   filters,
@@ -129,8 +125,6 @@ async function StudentView({
     </div>
   );
 }
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function JobsPage({
   searchParams,

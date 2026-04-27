@@ -7,8 +7,6 @@ import { createJobSchema, applyToJobSchema } from "@/validations/jobs";
 import type { CreateJobInput } from "@/validations/jobs";
 import { createNotification } from "@/actions/notifications";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export type JobPosting = {
   id: string;
   recruiter_id: string;
@@ -57,8 +55,6 @@ export type JobFilters = {
   skill?: string;
 };
 
-// ─── Recruiter: Create job posting ───────────────────────────────────────────
-
 export async function createJobPosting(
   input: CreateJobInput
 ): Promise<{ ok: true; id: string } | { ok: false; error: string }> {
@@ -80,7 +76,6 @@ export async function createJobPosting(
   revalidatePath("/jobs");
   revalidatePath("/feed");
 
-  // Notify all students subscribed to this recruiter
   const adminSupabase = await import("@/lib/supabase/server").then((m) =>
     m.createAdminClient()
   );
@@ -111,8 +106,6 @@ export async function createJobPosting(
   return { ok: true, id: data.id };
 }
 
-// ─── Recruiter: Update job posting ───────────────────────────────────────────
-
 export async function updateJobPosting(
   jobId: string,
   input: CreateJobInput
@@ -135,8 +128,6 @@ export async function updateJobPosting(
   revalidatePath(`/jobs/${jobId}`);
   return { ok: true };
 }
-
-// ─── Recruiter: Toggle active/inactive ───────────────────────────────────────
 
 export async function toggleJobActive(
   jobId: string
@@ -165,8 +156,6 @@ export async function toggleJobActive(
   return { ok: true, is_active: !existing.is_active };
 }
 
-// ─── Recruiter: Delete job posting ───────────────────────────────────────────
-
 export async function deleteJobPosting(
   jobId: string
 ): Promise<{ ok: true } | { ok: false; error: string }> {
@@ -185,8 +174,6 @@ export async function deleteJobPosting(
   return { ok: true };
 }
 
-// ─── Recruiter: Get my job postings ──────────────────────────────────────────
-
 export async function getMyJobPostings(): Promise<JobPosting[]> {
   const user = await getUser();
   if (user.role !== "recruiter") return [];
@@ -200,8 +187,6 @@ export async function getMyJobPostings(): Promise<JobPosting[]> {
 
   return (data ?? []) as JobPosting[];
 }
-
-// ─── Recruiter: Get single posting (for edit) ─────────────────────────────────
 
 export async function getMyJobPosting(jobId: string): Promise<JobPosting | null> {
   const user = await getUser();
@@ -217,8 +202,6 @@ export async function getMyJobPosting(jobId: string): Promise<JobPosting | null>
 
   return (data as JobPosting) ?? null;
 }
-
-// ─── Recruiter: Get applications for a job ───────────────────────────────────
 
 export async function getJobApplications(jobId: string): Promise<JobApplication[]> {
   const user = await getUser();
@@ -258,8 +241,6 @@ export async function getJobApplications(jobId: string): Promise<JobApplication[
   }));
 }
 
-// ─── Recruiter: Update application status ────────────────────────────────────
-
 export async function updateApplicationStatus(
   applicationId: string,
   status: JobApplication["status"]
@@ -293,7 +274,6 @@ export async function updateApplicationStatus(
 
   if (error) return { ok: false, error: "Failed to update status." };
 
-  // Create notification for the student
   if (status === "accepted" || status === "rejected") {
     const { data: appData } = await supabase
       .from("job_applications")
@@ -322,8 +302,6 @@ export async function updateApplicationStatus(
   return { ok: true };
 }
 
-// ─── Student/Public: Get active job postings ─────────────────────────────────
-
 export async function getActiveJobPostings(filters: JobFilters = {}): Promise<JobPosting[]> {
   const supabase = await createClient();
 
@@ -341,8 +319,6 @@ export async function getActiveJobPostings(filters: JobFilters = {}): Promise<Jo
   return (data ?? []) as unknown as JobPosting[];
 }
 
-// ─── Student/Public: Get single job posting detail ───────────────────────────
-
 export async function getJobPostingDetail(jobId: string): Promise<JobPosting | null> {
   const supabase = await createClient();
   const { data } = await supabase
@@ -353,8 +329,6 @@ export async function getJobPostingDetail(jobId: string): Promise<JobPosting | n
 
   return (data as unknown as JobPosting) ?? null;
 }
-
-// ─── Student: Apply to a job ──────────────────────────────────────────────────
 
 export async function applyToJob(
   jobId: string,
@@ -390,8 +364,6 @@ export async function applyToJob(
   return { ok: true };
 }
 
-// ─── Student: Get my applications ────────────────────────────────────────────
-
 export async function getMyApplications(): Promise<JobApplication[]> {
   const user = await getUser();
   if (user.role !== "student") return [];
@@ -419,8 +391,6 @@ export async function getMyApplications(): Promise<JobApplication[]> {
     job: postingMap.get(a.job_id) as unknown as JobApplication["job"],
   }));
 }
-
-// ─── Student: Get IDs of jobs already applied to ─────────────────────────────
 
 export async function getAppliedJobIds(): Promise<string[]> {
   const user = await getUser();

@@ -32,8 +32,6 @@ function Field({
   );
 }
 
-// ─── Template Selector ────────────────────────────────────────────────────────
-
 function TemplateSelector({
   value,
   onChange,
@@ -68,8 +66,6 @@ function TemplateSelector({
     </div>
   );
 }
-
-// ─── Personal Info ────────────────────────────────────────────────────────────
 
 function PersonalSection({
   value,
@@ -111,8 +107,6 @@ function PersonalSection({
   );
 }
 
-// ─── Summary ──────────────────────────────────────────────────────────────────
-
 function SummarySection({
   value,
   onChange,
@@ -132,8 +126,6 @@ function SummarySection({
     </div>
   );
 }
-
-// ─── Education ────────────────────────────────────────────────────────────────
 
 function EducationSection({
   value,
@@ -191,8 +183,6 @@ function EducationSection({
   );
 }
 
-// ─── Skills ───────────────────────────────────────────────────────────────────
-
 function SkillsSection({
   value,
   onChange,
@@ -238,8 +228,6 @@ function SkillsSection({
     </div>
   );
 }
-
-// ─── Projects ─────────────────────────────────────────────────────────────────
 
 function ProjectsSection({
   value,
@@ -304,8 +292,6 @@ function ProjectsSection({
   );
 }
 
-// ─── Certifications ───────────────────────────────────────────────────────────
-
 function CertificationsSection({
   value,
   onChange,
@@ -348,8 +334,6 @@ function CertificationsSection({
     </div>
   );
 }
-
-// ─── Main export ──────────────────────────────────────────────────────────────
 
 export function ResumeForm({ value, onChange }: Props) {
   const set =

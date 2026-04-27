@@ -6,8 +6,6 @@ import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/actions/portfolio";
 import type { GitHubRepo } from "@/lib/github";
 
-// ─── Disconnect GitHub ────────────────────────────────────────────────────────
-
 export async function disconnectGitHub(): Promise<ActionResult> {
   const supabase = await createClient();
 
@@ -31,8 +29,6 @@ export async function disconnectGitHub(): Promise<ActionResult> {
   revalidatePath("/settings");
   return { ok: true };
 }
-
-// ─── Import repos as projects ─────────────────────────────────────────────────
 
 interface ImportRepoInput {
   id: number; // GitHub repo id
@@ -135,8 +131,6 @@ export async function importGithubRepos(
 
   return { ok: true, data: { imported: toInsert.length, skipped } };
 }
-
-// ─── Add GitHub-suggested skills ─────────────────────────────────────────────
 
 export async function addGithubSkills(
   skillNames: string[]

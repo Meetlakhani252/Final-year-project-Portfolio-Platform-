@@ -158,8 +158,6 @@ export async function deleteComment(id: string): Promise<ActionResult> {
   return { ok: true };
 }
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
 async function isPortfolioOwner(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any,

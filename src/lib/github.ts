@@ -1,7 +1,5 @@
 import { APP_URL } from "@/lib/constants";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
 export interface GitHubRepo {
   id: number;
   name: string;
@@ -27,8 +25,6 @@ export interface GitHubUser {
 // Language bytes map returned by GET /repos/{owner}/{repo}/languages
 export type LanguageBytes = Record<string, number>;
 
-// ─── OAuth URL builder ────────────────────────────────────────────────────────
-
 export function getGitHubAuthUrl(userId: string): string {
   const params = new URLSearchParams({
     client_id: process.env.GITHUB_CLIENT_ID!,
@@ -38,8 +34,6 @@ export function getGitHubAuthUrl(userId: string): string {
   });
   return `https://github.com/login/oauth/authorize?${params.toString()}`;
 }
-
-// ─── Token exchange (server-only) ────────────────────────────────────────────
 
 export async function exchangeCodeForToken(code: string, redirectUri: string): Promise<string> {
   const res = await fetch("https://github.com/login/oauth/access_token", {
@@ -68,8 +62,6 @@ export async function exchangeCodeForToken(code: string, redirectUri: string): P
 
   return data.access_token;
 }
-
-// ─── GitHub API helpers ───────────────────────────────────────────────────────
 
 export async function fetchGitHubUser(accessToken: string): Promise<GitHubUser> {
   const res = await fetch("https://api.github.com/user", {
@@ -140,8 +132,6 @@ export async function fetchRepoLanguages(
   return res.json() as Promise<LanguageBytes>;
 }
 
-// ─── Aggregate languages across all repos ────────────────────────────────────
-
 export async function fetchAggregatedLanguages(
   accessToken: string,
   repos: GitHubRepo[]
@@ -163,10 +153,6 @@ export async function fetchAggregatedLanguages(
 
   return totals;
 }
-
-// ─── Language → Skill name mapping ───────────────────────────────────────────
-// Maps GitHub language names to the canonical skill names used in the platform.
-// Languages that don't map to a meaningful standalone skill are omitted.
 
 export const LANGUAGE_TO_SKILL: Record<string, string> = {
   JavaScript: "JavaScript",
@@ -202,10 +188,6 @@ export const LANGUAGE_TO_SKILL: Record<string, string> = {
   Solidity: "Solidity",
 };
 
-/**
- * Convert a map of { language: bytes } to deduplicated skill names,
- * sorted by total bytes (most prominent first).
- */
 export function languagesToSkillSuggestions(languages: LanguageBytes): string[] {
   const seen = new Set<string>();
   const entries = Object.entries(languages).sort(([, a], [, b]) => b - a);

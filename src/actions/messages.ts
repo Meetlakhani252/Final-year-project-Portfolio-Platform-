@@ -5,8 +5,6 @@ import { createClient } from "@/lib/supabase/server";
 import { messageSchema } from "@/validations/message";
 import { createNotification } from "@/lib/create-notification";
 
-// ─── Types ──────────────────────────────────────────────────────────────────
-
 export type ParticipantProfile = {
   id: string;
   full_name: string;
@@ -39,12 +37,6 @@ export type ActionResult<T = undefined> =
   | { ok: true; data?: T }
   | { ok: false; error: string };
 
-// ─── startConversation ───────────────────────────────────────────────────────
-
-/**
- * Find or create a conversation with recipientId.
- * Enforces: students cannot initiate DMs with recruiters.
- */
 export async function startConversation(
   recipientId: string
 ): Promise<ActionResult<{ conversationId: string }>> {
@@ -116,8 +108,6 @@ export async function startConversation(
   return { ok: true, data: { conversationId: conv.id } };
 }
 
-// ─── sendMessage ─────────────────────────────────────────────────────────────
-
 export async function sendMessage(
   conversationId: string,
   content: string
@@ -133,7 +123,6 @@ export async function sendMessage(
     return { ok: false, error: parsed.error.issues[0].message };
   }
 
-  // Verify user is a participant and get the other participant's id
   const { data: conv } = await supabase
     .from("conversations")
     .select("id, participant_one, participant_two")
@@ -161,7 +150,6 @@ export async function sendMessage(
     .eq("id", user.id)
     .single();
 
-  // Notify the recipient
   const recipientId =
     conv.participant_one === user.id ? conv.participant_two : conv.participant_one;
 
@@ -178,8 +166,6 @@ export async function sendMessage(
   return { ok: true, data: { ...message, sender: senderProfile ?? null } };
 }
 
-// ─── markMessagesRead ────────────────────────────────────────────────────────
-
 export async function markMessagesRead(conversationId: string): Promise<void> {
   const supabase = await createClient();
   const {
@@ -194,8 +180,6 @@ export async function markMessagesRead(conversationId: string): Promise<void> {
     .neq("sender_id", user.id)
     .is("read_at", null);
 }
-
-// ─── getConversations ────────────────────────────────────────────────────────
 
 export async function getConversations(): Promise<ConversationItem[]> {
   const supabase = await createClient();
@@ -274,8 +258,6 @@ export async function getConversations(): Promise<ConversationItem[]> {
   });
 }
 
-// ─── getMessages ─────────────────────────────────────────────────────────────
-
 export async function getMessages(
   conversationId: string
 ): Promise<MessageItem[]> {
@@ -316,8 +298,6 @@ export async function getMessages(
     sender: profileMap.get(m.sender_id) ?? null,
   }));
 }
-
-// ─── getUnreadCount ───────────────────────────────────────────────────────────
 
 export async function getUnreadCount(): Promise<number> {
   const supabase = await createClient();

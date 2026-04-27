@@ -72,8 +72,6 @@ function normalizeEvent(raw: unknown): TeamPost["event"] {
   return first as TeamPost["event"];
 }
 
-// ─── createTeamPost ───────────────────────────────────────────────────────────
-
 export async function createTeamPost(
   data: CreateTeamPostInput
 ): Promise<{ ok: true; id: string } | { ok: false; error: string }> {
@@ -112,8 +110,6 @@ export async function createTeamPost(
 
   return { ok: true, id: post.id };
 }
-
-// ─── getTeamPosts ─────────────────────────────────────────────────────────────
 
 export async function getTeamPosts(
   filters: TeamPostFilters = {}
@@ -156,8 +152,6 @@ export async function getTeamPosts(
   }));
 }
 
-// ─── getTeamPost ──────────────────────────────────────────────────────────────
-
 export async function getTeamPost(postId: string): Promise<TeamPost | null> {
   const supabase = await createClient();
 
@@ -183,8 +177,6 @@ export async function getTeamPost(postId: string): Promise<TeamPost | null> {
   };
 }
 
-// ─── getTeamPostComments ──────────────────────────────────────────────────────
-
 export async function getTeamPostComments(
   postId: string
 ): Promise<TeamPostComment[]> {
@@ -208,8 +200,6 @@ export async function getTeamPostComments(
     author: normalizeAuthor(row.author),
   }));
 }
-
-// ─── addTeamComment ───────────────────────────────────────────────────────────
 
 export async function addTeamComment(
   postId: string,
@@ -264,8 +254,6 @@ export async function addTeamComment(
   return { ok: true };
 }
 
-// ─── deleteTeamComment ────────────────────────────────────────────────────────
-
 export async function deleteTeamComment(
   commentId: string,
   postId: string
@@ -286,8 +274,6 @@ export async function deleteTeamComment(
   revalidatePath(`/teams/${postId}`);
   return { ok: true };
 }
-
-// ─── closeTeamPost ────────────────────────────────────────────────────────────
 
 export async function closeTeamPost(
   postId: string
@@ -310,8 +296,6 @@ export async function closeTeamPost(
   return { ok: true };
 }
 
-// ─── reopenTeamPost ───────────────────────────────────────────────────────────
-
 export async function reopenTeamPost(
   postId: string
 ): Promise<{ ok: true } | { ok: false; error: string }> {
@@ -332,8 +316,6 @@ export async function reopenTeamPost(
   revalidatePath("/teams");
   return { ok: true };
 }
-
-// ─── getMatchedStudents ───────────────────────────────────────────────────────
 
 export type MatchedStudent = {
   profile_id: string;
@@ -423,8 +405,6 @@ export async function getMatchedStudents(
     .sort((a, b) => b.matching_skills.length - a.matching_skills.length)
     .slice(0, 20);
 }
-
-// ─── getUpcomingEventsForSelect ───────────────────────────────────────────────
 
 export async function getUpcomingEventsForSelect(): Promise<EventOption[]> {
   const supabase = await createClient();

@@ -1,7 +1,5 @@
 import type { Database } from "@/types/database";
 
-// ─── Resume data types ────────────────────────────────────────────────────────
-
 export type ResumeTemplate = "classic" | "modern";
 
 export interface ResumePersonal {
@@ -44,8 +42,6 @@ export interface ResumeData {
   projects: ResumeProjectItem[];
   certifications: ResumeCertificationItem[];
 }
-
-// ─── Portfolio → Resume mapper ────────────────────────────────────────────────
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type Project = Database["public"]["Tables"]["projects"]["Row"];
