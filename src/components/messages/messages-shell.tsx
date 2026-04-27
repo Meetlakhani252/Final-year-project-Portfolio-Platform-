@@ -255,6 +255,10 @@ export function MessagesShell({
           <ConversationView
             conversationId={activeConversationId}
             currentUserId={currentUserId}
+            initialOtherParticipant={
+              conversations.find((c) => c.id === activeConversationId)
+                ?.otherParticipant
+            }
           />
         ) : (
           /* Empty state — no chat selected */

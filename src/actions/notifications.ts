@@ -139,14 +139,9 @@ export async function createNotification(
 ): Promise<ActionResult> {
   const supabase = await createAdminClient();
 
-  // Fallback type if the database constraint hasn't been updated yet
-  const safeType = ["comment", "dm", "team_match", "event_new", "forum_reply"].includes(data.type) 
-    ? data.type 
-    : "event_new";
-
   const { error } = await supabase.from("notifications").insert({
     profile_id: profileId,
-    type: safeType,
+    type: data.type,
     title: data.title,
     body: data.body,
     link: data.link,

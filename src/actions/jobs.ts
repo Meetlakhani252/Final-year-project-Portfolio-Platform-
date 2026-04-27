@@ -279,7 +279,7 @@ export async function updateApplicationStatus(
         : `Your application for ${jobInfo.title} at ${jobInfo.company} was not selected at this time.`;
 
       await createNotification(appData.student_id, {
-        type: "application" as any,
+        type: "application",
         title,
         body,
         link: "/jobs/applications",

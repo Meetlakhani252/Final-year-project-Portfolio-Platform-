@@ -15,11 +15,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useMessages } from "@/hooks/use-messages";
 import { sendMessage, markMessagesRead } from "@/actions/messages";
-import type { MessageItem } from "@/actions/messages";
+import type { MessageItem, ParticipantProfile } from "@/actions/messages";
 
 interface ConversationViewProps {
   conversationId: string;
   currentUserId: string;
+  initialOtherParticipant?: ParticipantProfile | null;
 }
 
 function getInitials(name: string) {
@@ -101,6 +102,7 @@ function MessageBubble({
 export function ConversationView({
   conversationId,
   currentUserId,
+  initialOtherParticipant,
 }: ConversationViewProps) {
   const { data: messages = [], isLoading } = useMessages(conversationId);
   const [content, setContent] = useState("");
@@ -123,10 +125,13 @@ export function ConversationView({
     markRead();
   }, [markRead, messages.length]);
 
-  // Determine other participant
-  const otherParticipant = messages.find(
-    (m) => m.sender_id !== currentUserId
-  )?.sender;
+  // Determine other participant — prefer a profile from received messages,
+  // fall back to the prop passed from the conversation list (handles the case
+  // where the current user sent the only message so far).
+  const otherParticipant =
+    messages.find((m) => m.sender_id !== currentUserId)?.sender ??
+    initialOtherParticipant ??
+    null;
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
