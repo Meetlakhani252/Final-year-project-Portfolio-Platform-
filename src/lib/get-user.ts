@@ -21,6 +21,11 @@ export const getUser = cache(async (): Promise<AppUser> => {
     redirect("/login");
   }
 
+  // Safety net: deny access to any session whose email was never confirmed
+  if (!user.email_confirmed_at) {
+    redirect("/login");
+  }
+
   return {
     id: user.id,
     email: user.email ?? "",

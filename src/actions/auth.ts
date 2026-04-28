@@ -152,6 +152,15 @@ export async function signIn(data: SignInInput): Promise<AuthResult> {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Block access for accounts that have not confirmed their email
+  if (!user?.email_confirmed_at) {
+    await supabase.auth.signOut();
+    return {
+      error:
+        "Please verify your email address before signing in. Check your inbox for a confirmation link.",
+    };
+  }
+
   if (user) {
     const userRole = (user.user_metadata?.role as string) ?? "student";
 
@@ -208,10 +217,12 @@ export async function requestEmailOtp(email: string): Promise<AuthResult> {
 
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { shouldCreateUser: true },
+    options: { shouldCreateUser: false },
   });
 
-  if (error) {
+  // Always return success to prevent email enumeration — callers show a
+  // generic "check your inbox" message regardless of whether the account exists.
+  if (error && !error.message.toLowerCase().includes("user not found")) {
     return { error: error.message };
   }
 
