@@ -15,6 +15,7 @@ import { sendWelcomeEmail } from "@/lib/resend";
 
 export type AuthResult = {
   error?: string;
+  email?: string;
 };
 
 export async function signUp(data: SignUpInput): Promise<AuthResult> {
@@ -161,24 +162,20 @@ export async function signIn(data: SignInInput): Promise<AuthResult> {
     };
   }
 
-  if (user) {
-    const userRole = (user.user_metadata?.role as string) ?? "student";
+  // Password is correct and email is confirmed — drop the session and send an
+  // OTP so the user proves they currently have access to that inbox.
+  await supabase.auth.signOut();
 
-    // Only students go through onboarding; recruiters/organizers go straight to dashboard
-    if (userRole === "student") {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("onboarding_completed")
-        .eq("id", user.id)
-        .single();
+  const { error: otpError } = await supabase.auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: false },
+  });
 
-      if (profile && !profile.onboarding_completed) {
-        redirect("/onboarding");
-      }
-    }
+  if (otpError) {
+    return { error: "Failed to send verification code. Please try again." };
   }
 
-  redirect("/dashboard");
+  return { error: "OTP_REQUIRED", email };
 }
 
 export async function signOut(): Promise<void> {

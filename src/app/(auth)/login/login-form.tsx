@@ -59,6 +59,8 @@ export function LoginForm() {
   const [otpEmail, setOtpEmail] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [otpError, setOtpError] = useState<string | null>(null);
+  // true when OTP was triggered by a password login (not the magic-link button)
+  const [otpFromPassword, setOtpFromPassword] = useState(false);
 
   const config = MODE_CONFIG[mode];
 
@@ -75,6 +77,7 @@ export function LoginForm() {
     setOtpEmail("");
     setOtpCode("");
     setOtpError(null);
+    setOtpFromPassword(false);
   }
 
   function switchMode(newMode: LoginMode) {
@@ -87,6 +90,12 @@ export function LoginForm() {
     setError(null);
     startTransition(async () => {
       const result = await signIn(data);
+      if (result?.error === "OTP_REQUIRED" && result.email) {
+        setOtpEmail(result.email);
+        setOtpFromPassword(true);
+        setOtpStep("code");
+        return;
+      }
       if (result?.error) setError(result.error);
     });
   }
@@ -309,16 +318,26 @@ export function LoginForm() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => { setOtpStep("email"); setOtpCode(""); setOtpError(null); }}
+                  onClick={() => {
+                    if (otpFromPassword) {
+                      resetOtp();
+                    } else {
+                      setOtpStep("email");
+                      setOtpCode("");
+                      setOtpError(null);
+                    }
+                  }}
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <ArrowLeft className="size-4" />
                 </button>
-                <p className="text-sm font-medium">Check your inbox</p>
+                <p className="text-sm font-medium">Verify your identity</p>
               </div>
               <p className="text-xs text-muted-foreground">
-                Code sent to <span className="font-medium text-foreground">{otpEmail}</span>.
-                Enter it below — it expires in 1 hour.
+                {otpFromPassword
+                  ? <>A 6-digit code was sent to <span className="font-medium text-foreground">{otpEmail}</span> to confirm it&apos;s you.</>
+                  : <>Code sent to <span className="font-medium text-foreground">{otpEmail}</span>. Enter it below — it expires in 1 hour.</>
+                }
               </p>
               {otpError && (
                 <p className="text-xs text-destructive">{otpError}</p>
