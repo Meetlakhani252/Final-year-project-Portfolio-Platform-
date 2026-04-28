@@ -66,8 +66,8 @@ export default function SignUpPage() {
   }
 
   function handleVerifyOtp() {
-    if (!otpCode || otpCode.trim().length < 6) {
-      setOtpError("Please enter the full 6-digit code");
+    if (!otpCode || otpCode.trim().length < 8) {
+      setOtpError("Please enter the full 8-digit code");
       return;
     }
     setOtpError(null);
@@ -93,7 +93,7 @@ export default function SignUpPage() {
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Verify your email</CardTitle>
           <CardDescription>
-            We sent a 6-digit code to{" "}
+            We sent an 8-digit code to{" "}
             <span className="font-medium text-foreground">{pendingEmail}</span>.
             Enter it below to activate your account.
           </CardDescription>
@@ -108,8 +108,8 @@ export default function SignUpPage() {
             <Input
               type="text"
               inputMode="numeric"
-              placeholder="123456"
-              maxLength={6}
+              placeholder="12345678"
+              maxLength={8}
               value={otpCode}
               onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
               onKeyDown={(e) => e.key === "Enter" && handleVerifyOtp()}

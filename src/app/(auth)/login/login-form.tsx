@@ -125,8 +125,8 @@ export function LoginForm() {
   }
 
   function handleVerifyOtp() {
-    if (!otpCode || otpCode.trim().length < 6) {
-      setOtpError("Please enter the 6-digit code");
+    if (!otpCode || otpCode.trim().length < 8) {
+      setOtpError("Please enter the 8-digit code");
       return;
     }
     setOtpError(null);
@@ -286,7 +286,7 @@ export function LoginForm() {
                 <p className="text-sm font-medium">Email verification</p>
               </div>
               <p className="text-xs text-muted-foreground">
-                We'll send a 6-digit code to your inbox.
+                We'll send an 8-digit code to your inbox.
               </p>
               {otpError && (
                 <p className="text-xs text-destructive">{otpError}</p>
@@ -346,8 +346,8 @@ export function LoginForm() {
                 <Input
                   type="text"
                   inputMode="numeric"
-                  placeholder="123456"
-                  maxLength={6}
+                  placeholder="12345678"
+                  maxLength={8}
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
                   onKeyDown={(e) => e.key === "Enter" && handleVerifyOtp()}
