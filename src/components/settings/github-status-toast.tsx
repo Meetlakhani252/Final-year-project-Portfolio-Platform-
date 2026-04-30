@@ -8,13 +8,15 @@ export function GitHubStatusToast() {
   const searchParams = useSearchParams();
   const status = searchParams.get("github");
 
+  const reason = searchParams.get("reason");
+
   useEffect(() => {
     if (status === "connected") {
       toast.success("GitHub connected successfully!");
     } else if (status === "error") {
-      toast.error("Failed to connect GitHub. Please try again.");
+      toast.error(`GitHub connection failed${reason ? `: ${reason}` : ""}. Please try again.`);
     }
-  }, [status]);
+  }, [status, reason]);
 
   return null;
 }

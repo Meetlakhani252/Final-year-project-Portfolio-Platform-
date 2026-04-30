@@ -32,12 +32,12 @@ export async function GET(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.redirect(`${APP_URL}/login`);
+    return NextResponse.redirect(`${APP_URL}/settings?github=error&reason=no_session`);
   }
 
   // State must match the logged-in user's id to prevent cross-account linking
   if (user.id !== state) {
-    return NextResponse.redirect(errorRedirect);
+    return NextResponse.redirect(`${APP_URL}/settings?github=error&reason=state_mismatch`);
   }
 
   try {
@@ -64,12 +64,13 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error("Failed to save GitHub connection:", error);
-      return NextResponse.redirect(errorRedirect);
+      return NextResponse.redirect(`${APP_URL}/settings?github=error&reason=db_${error.code}`);
     }
 
     return NextResponse.redirect(`${APP_URL}/settings?github=connected`);
   } catch (err) {
+    const msg = err instanceof Error ? err.message.slice(0, 60) : "unknown";
     console.error("GitHub OAuth error:", err);
-    return NextResponse.redirect(errorRedirect);
+    return NextResponse.redirect(`${APP_URL}/settings?github=error&reason=${encodeURIComponent(msg)}`);
   }
 }
