@@ -23,8 +23,10 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { GitHubConnectSection } from "@/components/github/github-connect-section";
+import { GitHubStatusToast } from "@/components/settings/github-status-toast";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { UsernameForm } from "@/components/settings/username-form";
+import { Suspense } from "react";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -57,6 +59,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-4xl py-10 space-y-10">
+      <Suspense><GitHubStatusToast /></Suspense>
       <div className="space-y-2">
         <h1 className="font-mono text-4xl font-bold tracking-tight text-foreground">
           <span className="text-primary">Config:</span> Platform Settings
