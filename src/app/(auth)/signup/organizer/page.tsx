@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/card";
 import { PLATFORM_NAME } from "@/lib/constants";
 
-export default function RecruiterSignUpPage() {
+export default function OrganizerSignUpPage() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [checkEmail, setCheckEmail] = useState(false);
@@ -37,7 +37,7 @@ export default function RecruiterSignUpPage() {
     formState: { errors },
   } = useForm<RecruiterSignUpInput>({
     resolver: zodResolver(recruiterSignUpSchema),
-    defaultValues: { role: "recruiter" },
+    defaultValues: { role: "organizer" },
   });
 
   function onSubmit(data: RecruiterSignUpInput) {
@@ -126,7 +126,7 @@ export default function RecruiterSignUpPage() {
     <Card>
       <CardHeader className="text-center">
         <CardTitle className="text-2xl">{PLATFORM_NAME}</CardTitle>
-        <CardDescription>Create your recruiter account</CardDescription>
+        <CardDescription>Create your organizer account</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (
@@ -173,7 +173,7 @@ export default function RecruiterSignUpPage() {
             <Input
               id="email"
               type="email"
-              placeholder="you@company.com"
+              placeholder="you@university.edu"
               autoComplete="email"
               {...register("email")}
               aria-invalid={!!errors.email}
@@ -203,10 +203,10 @@ export default function RecruiterSignUpPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="company">Company</Label>
+            <Label htmlFor="company">Organization / University</Label>
             <Input
               id="company"
-              placeholder="Acme Corp"
+              placeholder="MIT / HackMIT"
               {...register("company")}
               aria-invalid={!!errors.company}
             />
@@ -236,8 +236,8 @@ export default function RecruiterSignUpPage() {
           </Link>
         </div>
         <div className="flex gap-1">
-          <span>Are you an organizer?</span>
-          <Link href="/signup/organizer" className="text-primary hover:underline">
+          <span>Are you a recruiter?</span>
+          <Link href="/signup/recruiter" className="text-primary hover:underline">
             Sign up here
           </Link>
         </div>

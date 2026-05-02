@@ -265,11 +265,14 @@ export default function SignUpPage() {
           </Link>
         </div>
         <div className="flex gap-1">
-          <span>Are you a recruiter or organizer?</span>
-          <Link
-            href="/signup/recruiter"
-            className="text-primary hover:underline"
-          >
+          <span>Are you a recruiter?</span>
+          <Link href="/signup/recruiter" className="text-primary hover:underline">
+            Sign up here
+          </Link>
+        </div>
+        <div className="flex gap-1">
+          <span>Are you an organizer?</span>
+          <Link href="/signup/organizer" className="text-primary hover:underline">
             Sign up here
           </Link>
         </div>

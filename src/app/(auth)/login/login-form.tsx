@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { GraduationCap, Briefcase, Mail, ArrowLeft } from "lucide-react";
+import { GraduationCap, Briefcase, CalendarDays, Mail, ArrowLeft } from "lucide-react";
 import {
   signIn,
   signInWithGithub,
@@ -27,7 +27,7 @@ import {
 import { cn } from "@/lib/utils";
 import { PLATFORM_NAME } from "@/lib/constants";
 
-type LoginMode = "student" | "recruiter";
+type LoginMode = "student" | "recruiter" | "organizer";
 type OtpStep = "idle" | "email" | "code";
 
 const MODE_CONFIG = {
@@ -44,6 +44,13 @@ const MODE_CONFIG = {
     signupLabel: "No recruiter account?",
     signupLinkLabel: "Register here",
     signupHref: "/signup/recruiter",
+  },
+  organizer: {
+    title: "Organizer Sign In",
+    description: "Sign in to your organizer account",
+    signupLabel: "No organizer account?",
+    signupLinkLabel: "Register here",
+    signupHref: "/signup/organizer",
   },
 };
 
@@ -177,6 +184,19 @@ export function LoginForm() {
           >
             <Briefcase className="size-4" />
             Recruiter
+          </button>
+          <button
+            type="button"
+            onClick={() => switchMode("organizer")}
+            className={cn(
+              "flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-all",
+              mode === "organizer"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <CalendarDays className="size-4" />
+            Organizer
           </button>
         </div>
 

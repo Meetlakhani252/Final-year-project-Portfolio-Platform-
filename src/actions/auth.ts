@@ -48,17 +48,19 @@ export async function signUp(data: SignUpInput): Promise<AuthResult> {
     return { error: error.message };
   }
 
-  // Send welcome email (fire and forget — don't block redirect on email failure)
+  // If email confirmation is required, session is null — tell the user to check email.
+  // Welcome email is sent after OTP is verified, not here, to avoid landing in inbox
+  // before the verification code does.
+  if (!signUpData.session) {
+    return { error: "CHECK_EMAIL" };
+  }
+
+  // Email confirmation disabled in Supabase — session granted immediately
   sendWelcomeEmail(parsed.data.email, {
     fullName: parsed.data.full_name,
     role: "student",
     dashboardUrl: `${APP_URL}/dashboard`,
   }).catch(() => {});
-
-  // If email confirmation is required, session is null — tell the user to check email
-  if (!signUpData.session) {
-    return { error: "CHECK_EMAIL" };
-  }
 
   redirect("/onboarding");
 }
@@ -95,23 +97,57 @@ export async function recruiterSignUp(
     return { error: error.message };
   }
 
-  // Send welcome email (fire and forget)
+  if (!signUpData.session) {
+    return { error: "CHECK_EMAIL" };
+  }
+
+  // Email confirmation disabled — session granted immediately
+  if (signUpData.user) {
+    await supabase
+      .from("profiles")
+      .update({ onboarding_completed: true })
+      .eq("id", signUpData.user.id);
+  }
+
   sendWelcomeEmail(parsed.data.email, {
     fullName: parsed.data.full_name,
     role: parsed.data.role as "recruiter" | "organizer",
     dashboardUrl: `${APP_URL}/dashboard`,
   }).catch(() => {});
 
-  if (!signUpData.session) {
-    return { error: "CHECK_EMAIL" };
+  redirect("/dashboard");
+}
+
+export async function verifyRecruiterSignupOtp(
+  email: string,
+  token: string
+): Promise<AuthResult> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "signup",
+  });
+
+  if (error) {
+    return { error: "Invalid or expired code. Please try again." };
   }
 
-  // Recruiters and organizers skip the student onboarding wizard
-  if (signUpData.user) {
+  const user = data.user;
+  if (user) {
+    const role = (user.user_metadata?.role as string) ?? "recruiter";
+
     await supabase
       .from("profiles")
       .update({ onboarding_completed: true })
-      .eq("id", signUpData.user.id);
+      .eq("id", user.id);
+
+    sendWelcomeEmail(email, {
+      fullName: (user.user_metadata?.full_name as string) ?? "",
+      role: role as "recruiter" | "organizer",
+      dashboardUrl: `${APP_URL}/dashboard`,
+    }).catch(() => {});
   }
 
   redirect("/dashboard");
@@ -267,7 +303,7 @@ export async function verifySignupOtp(
 ): Promise<AuthResult> {
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.verifyOtp({
+  const { data, error } = await supabase.auth.verifyOtp({
     email,
     token,
     type: "signup",
@@ -276,6 +312,14 @@ export async function verifySignupOtp(
   if (error) {
     return { error: "Invalid or expired code. Please try again." };
   }
+
+  // Identity confirmed — safe to send the welcome email now
+  const fullName = (data.user?.user_metadata?.full_name as string) ?? "";
+  sendWelcomeEmail(email, {
+    fullName,
+    role: "student",
+    dashboardUrl: `${APP_URL}/dashboard`,
+  }).catch(() => {});
 
   redirect("/onboarding");
 }
