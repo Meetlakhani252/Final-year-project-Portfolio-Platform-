@@ -27,31 +27,9 @@ export default async function PublicProfileLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getOptionalUser();
-
-  if (!user) {
-    return <>{children}</>;
-  }
-
-  const nav = user.role === "recruiter" ? RECRUITER_NAV : STUDENT_NAV;
-
   return (
-    <div className="flex h-screen flex-col">
-      <TopNavbar
-        items={nav}
-        user={{
-          fullName: user.fullName,
-          email: user.email,
-          avatarUrl: user.avatarUrl,
-          username: user.username,
-        }}
-      />
-      <div className="flex flex-1 overflow-hidden">
-        <DesktopSidebar items={nav} />
-        <main className="flex-1 overflow-y-auto">
-          {children}
-        </main>
-      </div>
+    <div className="min-h-screen bg-background">
+      {children}
     </div>
   );
 }

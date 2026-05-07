@@ -308,27 +308,26 @@ export default async function PublicPortfolioPage({
     skills: () => {
       if (!skills || skills.length === 0) return null;
       return (
-        <section id="skills" className="space-y-4">
-          <h2 className="font-mono text-xl font-bold tracking-tight text-primary flex items-center gap-2">
-            <Cpu className="size-5" /> &gt; Core Architecture
-          </h2>
-          <Card className="glass-card p-6">
-            <div className="space-y-6">
-              {/* Visual Proficiency bars for top 3 skills, then badges */}
-              <div className="grid gap-4">
-                {skills.slice(0, 3).map((skill, i) => (
-                  <div key={skill.id} className="space-y-2">
-                    <div className="flex justify-between text-xs font-mono">
-                      <span className="text-foreground">{skill.name}</span>
-                      <span className="text-primary">{85 - i * 5}%</span>
+        <section id="skills" className="space-y-4 h-full">
+          <Card className="glass-card p-6 h-full border-primary/10 flex flex-col">
+            <h2 className="font-mono text-lg font-bold tracking-tight text-primary flex items-center gap-2 mb-4">
+              <Cpu className="size-5" /> &gt; Core Architecture
+            </h2>
+            <div className="space-y-4 flex-1">
+              <div className="grid gap-3">
+                {skills.slice(0, 4).map((skill, i) => (
+                  <div key={skill.id} className="space-y-1">
+                    <div className="flex justify-between text-[10px] font-mono">
+                      <span className="text-foreground/70 uppercase">{skill.name}</span>
+                      <span className="text-primary">{90 - i * 5}%</span>
                     </div>
-                    <Progress value={85 - i * 5} className="h-1.5 bg-primary/10" />
+                    <Progress value={90 - i * 5} className="h-1 bg-primary/10" />
                   </div>
                 ))}
               </div>
-              <div className="flex flex-wrap gap-2 pt-2">
-                {skills.slice(3).map((skill) => (
-                  <span key={skill.id} className="badge-sage">
+              <div className="flex flex-wrap gap-1.5 pt-2">
+                {skills.slice(4).map((skill) => (
+                  <span key={skill.id} className="badge-sage text-[9px]">
                     {skill.name}
                   </span>
                 ))}
@@ -342,48 +341,25 @@ export default async function PublicPortfolioPage({
     certifications: () => {
       if (!certifications || certifications.length === 0) return null;
       return (
-        <section id="certifications" className="space-y-4">
-          <h2 className="font-mono text-xl font-bold tracking-tight text-primary">
-            &gt; Certifications
-          </h2>
-          <div className="grid gap-3">
-            {certifications.map((cert) => (
-              <Card key={cert.id} className="glass-card border-primary/10 hover:border-primary/30">
-                <CardContent className="flex items-start gap-3 p-4">
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                    <Award className="size-5 text-primary" />
+        <section id="certifications" className="space-y-4 h-full">
+          <Card className="glass-card p-6 h-full border-primary/10 flex flex-col">
+            <h2 className="font-mono text-lg font-bold tracking-tight text-primary flex items-center gap-2 mb-4">
+              <Award className="size-5" /> &gt; Credentials
+            </h2>
+            <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar">
+              {certifications.map((cert) => (
+                <div key={cert.id} className="flex items-center gap-3 p-2 rounded-lg bg-primary/5 border border-primary/5">
+                  <div className="size-8 shrink-0 flex items-center justify-center rounded bg-primary/10">
+                    <Award className="size-4 text-primary" />
                   </div>
-                  <div className="min-w-0 flex-1 space-y-0.5">
-                    <p className="text-sm font-medium leading-tight">
-                      {cert.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {cert.issuer}
-                    </p>
-                    {cert.issue_date && (
-                      <p className="text-xs text-muted-foreground">
-                        {new Date(cert.issue_date + "T00:00:00").toLocaleDateString(
-                          "en-US",
-                          { month: "short", year: "numeric" }
-                        )}
-                      </p>
-                    )}
-                    {cert.credential_url && (
-                      <Link
-                        href={cert.credential_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                      >
-                        View credential
-                        <ExternalLink className="size-3" />
-                      </Link>
-                    )}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-medium truncate">{cert.name}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{cert.issuer}</p>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                </div>
+              ))}
+            </div>
+          </Card>
         </section>
       );
     },
@@ -391,65 +367,23 @@ export default async function PublicPortfolioPage({
     education: () => {
       if (!education || education.length === 0) return null;
       return (
-        <section id="education" className="space-y-4">
-          <h2 className="font-mono text-xl font-bold tracking-tight text-primary">
-            &gt; Education
-          </h2>
-          <div className="space-y-3">
-            {education.map((edu) => (
-              <Card key={edu.id} className="glass-card border-primary/10 hover:border-primary/30">
-                <CardContent className="flex items-start gap-3 p-4">
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                    <GraduationCap className="size-5 text-primary" />
-                  </div>
-                  <div className="min-w-0 flex-1 space-y-0.5">
-                    <p className="text-sm font-medium leading-tight">
-                      {edu.institution}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {edu.degree}
-                      {edu.field_of_study ? ` in ${edu.field_of_study}` : ""}
-                    </p>
-                    {(edu.start_date || edu.end_date) && (
-                      <p className="text-xs text-muted-foreground">
-                        {edu.start_date
-                          ? new Date(
-                            edu.start_date + "T00:00:00"
-                          ).toLocaleDateString("en-US", {
-                            month: "short",
-                            year: "numeric",
-                          })
-                          : "?"}{" "}
-                        –{" "}
-                        {edu.end_date
-                          ? new Date(
-                            edu.end_date + "T00:00:00"
-                          ).toLocaleDateString("en-US", {
-                            month: "short",
-                            year: "numeric",
-                          })
-                          : "Present"}
-                      </p>
-                    )}
-                    {edu.gpa != null && (
-                      <p className="text-xs text-muted-foreground">
-                        GPA: {edu.gpa.toFixed(2)}
-                      </p>
-                    )}
-                    {edu.courses.length > 0 && (
-                      <div className="flex flex-wrap gap-1 pt-1">
-                        {edu.courses.map((course) => (
-                          <span key={course} className="badge-sage text-[11px]">
-                            {course}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+        <section id="education" className="space-y-4 h-full">
+          <Card className="glass-card p-6 h-full border-primary/10 flex flex-col">
+            <h2 className="font-mono text-lg font-bold tracking-tight text-primary flex items-center gap-2 mb-4">
+              <GraduationCap className="size-5" /> &gt; Education
+            </h2>
+            <div className="space-y-4 flex-1">
+              {education.slice(0, 2).map((edu) => (
+                <div key={edu.id} className="space-y-1">
+                  <p className="text-sm font-bold leading-tight line-clamp-1">{edu.institution}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-1">{edu.degree}</p>
+                  <p className="text-[10px] font-mono text-primary/60">
+                    {edu.end_date ? new Date(edu.end_date).getFullYear() : "Present"}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Card>
         </section>
       );
     },
@@ -654,76 +588,199 @@ export default async function PublicPortfolioPage({
   const activeSections = renderedSections.map(({ id }) => ({
     id,
     label: SECTION_LABELS[id] ?? id,
-  }));
+  }));  const stats = [
+    { label: "Projects", value: projects?.length || 0, icon: Layers, color: "text-blue-400" },
+    { label: "Skills", value: skills?.length || 0, icon: Code2, color: "text-emerald-400" },
+    { label: "GPA", value: profile.gpa?.toFixed(2) || "N/A", icon: GraduationCap, color: "text-amber-400" },
+  ];
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:py-12 space-y-10">
-      <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
+    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:py-16 space-y-8">
+      {/* Top Bar / Header */}
+      <div className="flex items-center justify-between mb-8">
         <BackButton />
-        <div className="flex items-center gap-4">
-          {/* Quick Stats Bar */}
-          <div className="hidden md:flex gap-6 px-6 py-3 glass-card rounded-full border-primary/10">
-            <div className="text-center">
-              <p className="text-[10px] uppercase font-mono text-muted-foreground">Sequences</p>
-              <p className="text-sm font-mono font-bold text-primary">{projects?.length || 0}</p>
-            </div>
-            <Separator orientation="vertical" className="h-8 bg-primary/20" />
-            <div className="text-center">
-              <p className="text-[10px] uppercase font-mono text-muted-foreground">Skills</p>
-              <p className="text-sm font-mono font-bold text-primary">{skills?.length || 0}</p>
-            </div>
-            <Separator orientation="vertical" className="h-8 bg-primary/20" />
-            <div className="text-center">
-              <p className="text-[10px] uppercase font-mono text-muted-foreground">GPA</p>
-              <p className="text-sm font-mono font-bold text-primary">{profile.gpa?.toFixed(2) || "N/A"}</p>
-            </div>
-          </div>
+        <div className="flex items-center gap-2">
+          <div className="size-2 bg-emerald-500 rounded-full animate-pulse" />
+          <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">System Online</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column - Navigation */}
-        <aside className="lg:col-span-3 space-y-6">
-          <div className="sticky top-24">
-            <ProfileSidebar sections={activeSections} />
-            <Card className="glass-card mt-6 p-4 border-dashed border-primary/30">
-              <p className="text-xs font-mono text-muted-foreground text-center">
-                Profile Status: <span className="text-primary font-bold">Optimized</span>
+      {/* Main Bento Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-4 auto-rows-min md:auto-rows-[120px]">
+        
+        {/* About Section - Hero Card */}
+        <div className="md:col-span-4 lg:col-span-8 lg:row-span-3">
+          <Card className="glass-card h-full overflow-hidden border-primary/20 relative group hover:border-primary/40 transition-all duration-500">
+            <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-primary/50 via-primary to-primary/50" />
+            <div className="absolute -top-24 -right-24 size-64 bg-primary/10 rounded-full blur-3xl opacity-50" />
+            <div className="absolute -bottom-24 -left-24 size-64 bg-cyan-500/5 rounded-full blur-3xl opacity-50" />
+            
+            <CardContent className="h-full flex flex-col justify-center p-8 md:p-10 relative z-10">
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+                <div className="relative">
+                  <div className="absolute -inset-1 bg-linear-to-r from-primary to-cyan-500 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
+                  <Avatar className="size-32 md:size-40 border-4 border-background relative shadow-2xl">
+                    {profile.avatar_url && (
+                      <AvatarImage src={profile.avatar_url} alt={profile.full_name} className="object-cover" />
+                    )}
+                    <AvatarFallback className="text-4xl font-mono bg-slate-900 text-primary">
+                      {getInitials(profile.full_name)}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+
+                <div className="flex-1 space-y-4 text-center md:text-left">
+                  <div className="space-y-1">
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
+                      <h1 className="font-mono text-4xl md:text-5xl font-bold tracking-tighter text-foreground">
+                        {profile.full_name}
+                      </h1>
+                      {profile.gpa && profile.gpa >= 3.5 && (
+                        <div className="badge-sage flex items-center gap-1 py-1">
+                          <Sparkles className="size-3" />
+                          Excellence
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-xl text-primary font-mono opacity-80">@{profile.username}</p>
+                  </div>
+                  
+                  <div className="flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <GraduationCap className="size-5 text-primary" />
+                      {profile.program}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Globe className="size-5 text-primary" />
+                      {profile.university}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
+                    <ConnectButton
+                      targetId={profile.id}
+                      initialIsConnected={isConnected}
+                      className="rounded-full px-8"
+                    />
+                    <Button variant="outline" className="rounded-full border-primary/20 hover:bg-primary/10">
+                      <FileText className="size-4 mr-2 text-primary" />
+                      Resume.exe
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Bio Card */}
+        <div className="md:col-span-2 lg:col-span-4 lg:row-span-2">
+          <Card className="glass-card h-full p-6 border-primary/10 flex flex-col justify-between hover:bg-primary/5 transition-colors">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-xs font-mono text-primary/60 uppercase tracking-widest">
+                <Terminal className="size-4" />
+                <span>Bio / Mission</span>
+              </div>
+              <p className="text-sm leading-relaxed text-foreground/90 font-sans italic">
+                &quot;{profile.bio || "No bio protocol found."}&quot;
               </p>
+            </div>
+            <div className="pt-4 flex justify-end">
+              <Sparkles className="size-5 text-primary/20" />
+            </div>
+          </Card>
+        </div>
+
+        {/* Stats Cards */}
+        {stats.map((stat, i) => (
+          <div key={i} className="md:col-span-1 lg:col-span-2 lg:row-span-1">
+            <Card className="glass-card h-full p-6 border-primary/10 flex flex-col items-center justify-center text-center group hover:border-primary/30 transition-all">
+              <stat.icon className={cn("size-6 mb-2 opacity-50 group-hover:opacity-100 transition-opacity", stat.color)} />
+              <p className="text-2xl font-mono font-bold text-foreground">{stat.value}</p>
+              <p className="text-[10px] uppercase font-mono text-muted-foreground tracking-tighter">{stat.label}</p>
             </Card>
           </div>
-        </aside>
+        ))}
 
-        {/* Right Column - Master Bento Grid */}
-        <div className="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-auto">
-          {renderedSections.map(({ id, element }) => (
-            <div
-              key={id}
-              className={cn(
-                id === "about" ? "md:col-span-12 lg:col-span-8" :
-                  id === "social" ? "md:col-span-6 lg:col-span-4" :
-                    id === "skills" ? "md:col-span-6 lg:col-span-5" :
-                      id === "education" ? "md:col-span-6 lg:col-span-7" :
-                        id === "projects" || id === "comments" ? "md:col-span-12" :
-                          "md:col-span-6"
-              )}
-            >
-              {element}
-            </div>
-          ))}
+        {/* Social / Connect Card */}
+        <div className="md:col-span-1 lg:col-span-2 lg:row-span-1">
+          <Card className="glass-card h-full p-4 border-primary/10 flex flex-wrap gap-2 items-center justify-center">
+            {socialLinks?.slice(0, 4).map((link) => {
+              const Icon = PLATFORM_ICON[link.platform as keyof typeof PLATFORM_ICON] ?? LinkIcon;
+              return (
+                <Link
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  className="size-10 flex items-center justify-center rounded-lg bg-primary/5 border border-primary/10 text-muted-foreground hover:text-primary hover:border-primary transition-all"
+                >
+                  <Icon className="size-5" />
+                </Link>
+              );
+            })}
+            {!socialLinks?.length && <p className="text-[10px] font-mono text-muted-foreground uppercase">No Links</p>}
+          </Card>
+        </div>
 
-          {/* Journey link */}
-          <div className="md:col-span-12 py-12 text-center border-t border-primary/10 mt-10">
-            <Link
-              href={`/u/${username}/journey`}
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full glass-card text-sm font-mono text-primary transition-all hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:border-primary/50 group"
-            >
-              <History className="size-5 transition-transform group-hover:rotate-180 duration-500" />
-              Access Historical Journey Log
-            </Link>
-          </div>
+        {/* Skills Section */}
+        <div className="md:col-span-2 lg:col-span-4 lg:row-span-2">
+          {sectionRenderers.skills()}
+        </div>
+
+        {/* Education Section */}
+        <div className="md:col-span-2 lg:col-span-4 lg:row-span-2">
+          {sectionRenderers.education()}
+        </div>
+
+        {/* Certifications Card */}
+        <div className="md:col-span-2 lg:col-span-4 lg:row-span-2 overflow-y-auto">
+          {sectionRenderers.certifications()}
+        </div>
+
+        {/* Projects - Full Width */}
+        <div className="md:col-span-4 lg:col-span-12">
+          {sectionRenderers.projects()}
+        </div>
+
+        {/* Blog Posts */}
+        <div className="md:col-span-4 lg:col-span-8">
+          {sectionRenderers.blog()}
+        </div>
+
+        {/* Photos */}
+        <div className="md:col-span-4 lg:col-span-4">
+          {sectionRenderers.photos()}
+        </div>
+
+        {/* Comments / Feedback */}
+        <div className="md:col-span-4 lg:col-span-12">
+          {sectionRenderers.comments()}
+        </div>
+
+        {/* Journey Link - Bottom Footer Style */}
+        <div className="md:col-span-4 lg:col-span-12 pt-12 pb-24 text-center">
+          <Link
+            href={`/u/${username}/journey`}
+            className="inline-flex items-center gap-3 px-10 py-5 rounded-full glass-card text-sm font-mono text-primary transition-all hover:shadow-[0_0_40px_rgba(34,211,238,0.4)] hover:border-primary/50 group"
+          >
+            <History className="size-5 transition-transform group-hover:rotate-180 duration-700" />
+            <span className="tracking-widest uppercase">Decipher Historical Journey</span>
+          </Link>
         </div>
       </div>
+
+      {/* Floating Navigation (Mobile/Desktop) */}
+      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full glass-card border-primary/20 flex items-center gap-8 shadow-2xl backdrop-blur-xl">
+        {activeSections.map((section) => (
+          <a
+            key={section.id}
+            href={`#${section.id}`}
+            className="text-[10px] font-mono font-bold text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest"
+          >
+            {section.label}
+          </a>
+        ))}
+      </nav>
     </div>
   );
 }
