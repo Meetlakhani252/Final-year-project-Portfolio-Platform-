@@ -605,9 +605,9 @@ export default async function PublicPortfolioPage({
         </div>
       </div>
 
-      {/* Main Bento Grid */}
+      {/* Main Bento Grid — top header cards only */}
       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-4 auto-rows-min md:auto-rows-[120px]">
-        
+
         {/* About Section - Hero Card */}
         <div className="md:col-span-4 lg:col-span-8 lg:row-span-3">
           <Card className="glass-card h-full overflow-hidden border-primary/20 relative group hover:border-primary/40 transition-all duration-500">
@@ -736,29 +736,28 @@ export default async function PublicPortfolioPage({
         <div className="md:col-span-2 lg:col-span-4 lg:row-span-2 overflow-y-auto">
           {sectionRenderers.certifications()}
         </div>
+      </div>
 
+      {/* Variable-height sections — outside bento grid to prevent overflow overlap */}
+      <div className="space-y-8">
         {/* Projects - Full Width */}
-        <div className="md:col-span-4 lg:col-span-12">
-          {sectionRenderers.projects()}
-        </div>
+        {sectionRenderers.projects()}
 
-        {/* Blog Posts */}
-        <div className="md:col-span-4 lg:col-span-8">
-          {sectionRenderers.blog()}
-        </div>
-
-        {/* Photos */}
-        <div className="md:col-span-4 lg:col-span-4">
-          {sectionRenderers.photos()}
+        {/* Blog + Photos side by side on large screens */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-8">
+            {sectionRenderers.blog()}
+          </div>
+          <div className="lg:col-span-4">
+            {sectionRenderers.photos()}
+          </div>
         </div>
 
         {/* Comments / Feedback */}
-        <div className="md:col-span-4 lg:col-span-12">
-          {sectionRenderers.comments()}
-        </div>
+        {sectionRenderers.comments()}
 
-        {/* Journey Link - Bottom Footer Style */}
-        <div className="md:col-span-4 lg:col-span-12 pt-12 pb-24 text-center">
+        {/* Journey Link */}
+        <div className="pt-4 pb-24 text-center">
           <Link
             href={`/u/${username}/journey`}
             className="inline-flex items-center gap-3 px-10 py-5 rounded-full glass-card text-sm font-mono text-primary transition-all hover:shadow-[0_0_40px_rgba(34,211,238,0.4)] hover:border-primary/50 group"
